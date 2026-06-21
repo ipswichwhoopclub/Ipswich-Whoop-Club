@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Ipswich Whoop Club</title>
+  <meta name="description" content="Learn about Ipswich Whoop Club — Ipswich's home of FPV indoor whoop racing, incorporated June 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #08080F; --bg-2:       #0C0C1A; --bg-card:    #0F0F1E;
+      --bg-card-h:    #131328; --primary:    #1B8AB0; --primary-b:  #22A8D8;
+      --primary-glow: rgba(34,168,216,0.25); --primary-dim: rgba(34,168,216,0.07);
+      --green:        #00E676; --text:       #DDE0F0; --text-dim:   #7A7AA0;
+      --text-muted:   #484870; --border:     #18183A; --border-b:   #222248;
+      --nav-bg:       #09091A;
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    a    { color:inherit; text-decoration:none; }
+    ul   { list-style:none; }
+    body { background:var(--bg); color:var(--text); font-family:'Exo 2',sans-serif; font-size:14px; line-height:1.6; min-height:100vh; }
+
+    /* ── TOP BAR ── */
+    .topbar { background:#040409; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; padding:5px 28px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--text-muted); }
+    .topbar-left { display:flex; align-items:center; gap:8px; }
+    .topbar-pip { width:7px; height:7px; border-radius:50%; background:var(--primary); box-shadow:0 0 7px var(--primary); animation:blink 2.4s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
+    .topbar-right span { color:var(--primary-b); }
+
+    /* ── HEADER ── */
+    .site-header { background:var(--bg-2); border-bottom:2px solid var(--border); padding:18px 28px; display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:20px; position:relative; overflow:hidden; }
+    .site-header::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(34,168,216,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(34,168,216,0.025) 1px,transparent 1px); background-size:44px 44px; pointer-events:none; }
+    .logo-wrap { position:relative; z-index:1; height:96px; display:flex; align-items:center; }
+    .logo-wrap img { height:96px; width:auto; display:block; filter:drop-shadow(0 0 14px rgba(34,168,216,0.45)); }
+    .widget-battery { position:relative; z-index:1; background:rgba(9,9,24,0.9); border:1px solid var(--border-b); padding:14px 22px; text-align:center; font-family:'Orbitron',monospace; }
+    .widget-battery .wlabel { display:block; font-size:9px; letter-spacing:0.2em; color:var(--text-muted); margin-bottom:2px; }
+    .widget-battery .wvalue { display:block; font-size:20px; font-weight:700; color:var(--primary-b); letter-spacing:0.04em; }
+    .battery-hb { margin-top:10px; display:flex; justify-content:center; }
+    .widget-status { position:relative; z-index:1; background:rgba(9,9,24,0.9); border:1px solid var(--border-b); padding:14px 22px; font-family:'Share Tech Mono',monospace; font-size:12px; display:flex; flex-direction:column; gap:9px; min-width:210px; }
+    .srow{display:flex;align-items:center;} .slabel{width:64px;color:var(--text-muted);letter-spacing:0.08em;} .sval{flex:1;color:var(--text);}
+    .sdots{display:flex;gap:3px;} .sdot{width:9px;height:9px;border-radius:2px;background:var(--green);box-shadow:0 0 5px rgba(0,230,118,0.7);} .sdot.off{background:var(--border-b);box-shadow:none;}
+
+    /* ── NAV ── */
+    .site-nav { background:var(--nav-bg); border-bottom:2px solid var(--border); display:flex; align-items:stretch; position:sticky; top:0; z-index:100; }
+    .nav-links{display:flex;flex:1;overflow-x:auto;} .nav-links::-webkit-scrollbar{display:none;}
+    .nav-links li a { display:flex; align-items:center; height:48px; padding:0 20px; font-family:'Orbitron',monospace; font-size:10.5px; font-weight:600; letter-spacing:0.13em; color:var(--text-dim); white-space:nowrap; border-right:1px solid var(--border); transition:color 0.18s,background 0.18s; }
+    .nav-links li a:hover{color:var(--primary-b);background:var(--primary-dim);}
+    .nav-links li a.active{color:var(--text);background:rgba(34,168,216,0.1);border-bottom:2px solid var(--primary-b);}
+    .nav-links li a.active::before{content:'▶ ';color:var(--primary-b);}
+    .nav-links li a.active::after{content:' ◀';color:var(--primary-b);}
+    .nav-login{display:flex;align-items:center;gap:8px;height:48px;padding:0 22px;font-family:'Orbitron',monospace;font-size:10.5px;font-weight:700;letter-spacing:0.13em;color:var(--text);background:rgba(27,138,176,0.12);border-left:2px solid var(--primary);white-space:nowrap;transition:background 0.18s,color 0.18s;}
+    .nav-login:hover{background:rgba(27,138,176,0.28);color:var(--primary-b);}
+
+    /* ── SIDEBAR SHARED ── */
+    .s-widget{background:var(--bg-card);border:1px solid var(--border);}
+    .s-widget-head{padding:13px 18px;border-bottom:1px solid var(--border);font-family:'Orbitron',monospace;font-size:10.5px;font-weight:700;letter-spacing:0.17em;color:var(--primary-b);}
+    .s-widget-head::before{content:'// ';opacity:0.6;}
+    .btn-sm-outline{display:flex;align-items:center;justify-content:space-between;margin:0 18px 18px;padding:10px 16px;border:1px solid var(--border-b);font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--text-dim);transition:border-color 0.18s,color 0.18s;}
+    .btn-sm-outline:hover{border-color:var(--primary);color:var(--primary-b);}
+
+    /* ── FOOTER ── */
+    .site-footer{margin-top:20px;border-top:1px solid var(--border);background:var(--bg-2);padding:26px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:24px;}
+    .ft-brand-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--primary-b);letter-spacing:0.1em;margin-bottom:4px;}
+    .ft-brand-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.15em;}
+    .ft-hb{margin-top:14px;}
+    .ft-tagline{text-align:center;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--primary);letter-spacing:0.15em;line-height:1.7;}
+    .ft-tagline .line2{display:block;}
+    .ft-right{text-align:right;}
+    .ft-copy{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--text-muted);letter-spacing:0.08em;line-height:1.9;margin-bottom:14px;}
+    .social-row{display:flex;gap:10px;justify-content:flex-end;}
+    .social-btn{width:34px;height:34px;border:1px solid var(--border-b);display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:border-color 0.18s,color 0.18s,box-shadow 0.18s;}
+    .social-btn:hover{border-color:var(--primary);color:var(--primary-b);box-shadow:0 0 10px var(--primary-glow);}
+
+    /* ── PAGE: ABOUT ─────────────────────────────────────────── */
+    .page-wrap { max-width:1440px; margin:0 auto; padding:20px 28px 0; }
+    .content-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start; margin-top:20px; }
+    .left-col { display:flex; flex-direction:column; gap:2px; }
+    .sidebar  { display:flex; flex-direction:column; gap:20px; }
+
+    .page-hero { background:var(--bg-card); border:1px solid var(--border); border-bottom:none; padding:28px 36px; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--primary),var(--primary-b),transparent); }
+    .page-eyebrow { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--primary); letter-spacing:0.18em; margin-bottom:10px; }
+    .page-title   { font-family:'Orbitron',monospace; font-size:28px; font-weight:900; text-transform:uppercase; margin-bottom:8px; }
+    .page-subtitle { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:0.12em; }
+
+    /* Story panel */
+    .story-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    .story-body {
+      padding: 28px 36px;
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.85;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .story-body p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .story-pull {
+      border-left: 3px solid var(--primary);
+      padding: 6px 0 6px 18px;
+      font-family: 'Orbitron', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-b);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    /* Values cards */
+    .values-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    .val-card {
+      background: var(--bg-card);
+      padding: 22px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .val-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--primary); transform:scaleX(0); transform-origin:left; transition:transform 0.25s ease; }
+    .val-card:hover::after { transform:scaleX(1); }
+    .val-icon { font-size:26px; line-height:1; margin-bottom:4px; }
+    .val-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; letter-spacing:0.12em; color:var(--primary-b); }
+    .val-desc  { font-size:12.5px; color:var(--text-dim); line-height:1.65; }
+
+    /* Committee */
+    .committee-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin: 1px;
+    }
+    .committee-card {
+      background: var(--bg-card);
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+    .committee-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--border-b);
+      background: var(--bg-2);
+      display: flex; align-items:center; justify-content:center;
+      font-size: 22px;
+      color: var(--text-muted);
+    }
+    .committee-role {
+      font-family: 'Orbitron', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+    .committee-name {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .committee-callsign {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Sidebar quick facts */
+    .fact-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .fact-row:last-child { border-bottom: none; }
+    .fact-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:0.1em; }
+    .fact-value { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--primary-b); letter-spacing:0.06em; text-align:right; }
+
+    /* Join CTA sidebar */
+    .join-cta { padding:22px 18px; text-align:center; }
+    .join-cta-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--text); letter-spacing:0.1em; margin-bottom:8px; }
+    .join-cta-body  { font-size:12px; color:var(--text-dim); line-height:1.65; margin-bottom:18px; }
+    .btn-cta {
+      display:inline-flex; align-items:center; gap:10px; padding:11px 24px;
+      border:2px solid var(--text); background:transparent; color:var(--text);
+      font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase; cursor:pointer;
+      transition:border-color 0.2s,color 0.2s,box-shadow 0.2s; width:100%; justify-content:center;
+    }
+    .btn-cta:hover { border-color:var(--primary-b); color:var(--primary-b); box-shadow:0 0 24px var(--primary-glow); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:1100px) {
+      .content-grid{grid-template-columns:1fr;} .widget-battery,.widget-status{display:none;} .site-header{grid-template-columns:auto 1fr;}
+      .committee-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:720px) {
+      .values-row,.committee-grid{grid-template-columns:1fr;}
+      .site-footer{grid-template-columns:1fr;text-align:center;} .social-row{justify-content:center;} .ft-right{text-align:center;} .page-wrap{padding:16px 16px 0;}
+    }
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left"><div class="topbar-pip" aria-hidden="true"></div>IPSWICH, QUEENSLAND, AUSTRALIA</div>
+    <div class="topbar-right"><span>FPV RACING</span> &bull; <span>COMMUNITY</span> &bull; <span>PROGRESSION</span></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo-wrap"><img src="assets/logo.png" alt="Ipswich Whoop Club logo" style="height:96px;width:auto;"></div>
+    <div></div>
+    <div class="widget-battery">
+      <span class="wlabel">FREESTYLE &</span><span class="wvalue">RACING</span>
+      <div class="battery-hb"><svg width="84" height="22" viewBox="0 0 84 22" fill="none"><polyline points="0,11 16,11 20,3 24,19 28,3 33,19 38,11 54,11 58,5 63,17 68,11 84,11" stroke="#1B8AB0" stroke-width="1.5" fill="none"/></svg></div>
+    </div>
+    <div class="widget-status">
+      <div class="srow"><span class="slabel">SIGNAL:</span><span class="sval">STRONG</span><div class="sdots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div></div>
+      <div class="srow"><span class="slabel">VTX:</span><span class="sval">CLEAR</span><div class="sdots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div></div>
+      <div class="srow"><span class="slabel">PILOTS:</span><span class="sval">10</span><div class="sdots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot off"></div></div></div>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <ul class="nav-links">
+      <li><a href="index.html"     >HOME</a></li>
+      <li><a href="events.html"    >EVENTS</a></li>
+      <li><a href="results.html"   >RESULTS</a></li>
+      <li><a href="rankings.html"  >RANKINGS</a></li>
+      <li><a href="membership.html">MEMBERSHIP</a></li>
+      <li><a href="gallery.html"   >GALLERY</a></li>
+      <li><a href="about.html"       class="active">ABOUT</a></li>
+      <li><a href="contact.html"   >CONTACT</a></li>
+    </ul>
+    <a href="portal.html" class="nav-login">
+      <svg width="13" height="14" viewBox="0 0 13 14" fill="currentColor" aria-hidden="true"><rect x="2" y="6" width="9" height="7" rx="1"/><path d="M4 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      PILOT LOGIN
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="page-wrap" id="main">
+
+    <div class="page-hero">
+      <p class="page-eyebrow">// WHO WE ARE</p>
+      <h1 class="page-title">ABOUT IWC</h1>
+      <p class="page-subtitle">COMMUNITY &bull; PASSION &bull; PROGRESSION</p>
+    </div>
+
+    <div class="content-grid">
+      <div class="left-col">
+
+        <!-- Our Story -->
+        <div class="story-panel">
+          <div class="s-widget-head">OUR STORY</div>
+          <div class="story-body">
+            <p>
+              Ipswich Whoop Club was born from a simple idea: <strong>Ipswich deserves its own FPV racing community.</strong>
+              What started as a handful of pilots flying in backyards and car parks quickly grew into something bigger — a group of
+              people genuinely passionate about indoor whoop racing and helping each other get better.
+            </p>
+            <div class="story-pull">
+              "We fly small. We race hard. We leave no pack un-sent."
+            </div>
+            <p>
+              In June 2026, we took the next step and became an <strong>Incorporated Association</strong>, giving the club a proper
+              structure and the foundation to grow. We're currently searching for a permanent indoor venue in Ipswich to host
+              regular race days, practice sessions and social meets.
+            </p>
+            <p>
+              Whether you're just getting started with your first tiny whoop or you're a seasoned racer chasing lap records,
+              IWC is the place for you. We run a tight, friendly community with a focus on <strong>pilot progression</strong> and
+              making racing accessible to everyone.
+            </p>
+          </div>
+        </div>
+
+        <!-- Values -->
+        <div class="values-row" role="list">
+          <div class="val-card" role="listitem">
+            <div class="val-icon" aria-hidden="true">👥</div>
+            <div class="val-title">COMMUNITY</div>
+            <p class="val-desc">A welcoming group of pilots at every skill level. No gatekeeping — just people who love flying small and going fast.</p>
+          </div>
+          <div class="val-card" role="listitem">
+            <div class="val-icon" aria-hidden="true">🏁</div>
+            <div class="val-title">RACING</div>
+            <p class="val-desc">Competitive indoor whoop racing in a safe, structured environment. Clean racing, fair competition, good vibes.</p>
+          </div>
+          <div class="val-card" role="listitem">
+            <div class="val-icon" aria-hidden="true">🔧</div>
+            <div class="val-title">PROGRESSION</div>
+            <p class="val-desc">Learn to build, tune and fly. Experienced pilots are always happy to help with betaflight, soldering and technique.</p>
+          </div>
+        </div>
+
+        <!-- Committee -->
+        <div class="committee-panel">
+          <div class="s-widget-head">THE COMMITTEE</div>
+          <div class="committee-grid">
+            <!--
+              Update committee member details below.
+              You can add or remove .committee-card blocks as needed.
+            -->
+            <div class="committee-card">
+              <div class="committee-avatar">✈️</div>
+              <div>
+                <div class="committee-role">PRESIDENT</div>
+                <div class="committee-name">Your Name</div>
+                <div class="committee-callsign">// CALLSIGN</div>
+              </div>
+            </div>
+            <div class="committee-card">
+              <div class="committee-avatar">📋</div>
+              <div>
+                <div class="committee-role">SECRETARY</div>
+                <div class="committee-name">Your Name</div>
+                <div class="committee-callsign">// CALLSIGN</div>
+              </div>
+            </div>
+            <div class="committee-card">
+              <div class="committee-avatar">💰</div>
+              <div>
+                <div class="committee-role">TREASURER</div>
+                <div class="committee-name">Your Name</div>
+                <div class="committee-callsign">// CALLSIGN</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /left col -->
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Club information">
+
+        <!-- Quick facts -->
+        <div class="s-widget">
+          <div class="s-widget-head">QUICK FACTS</div>
+          <div class="fact-row"><span class="fact-label">FOUNDED</span><span class="fact-value">2026</span></div>
+          <div class="fact-row"><span class="fact-label">INCORPORATED</span><span class="fact-value">18 JUN 2026</span></div>
+          <div class="fact-row"><span class="fact-label">LOCATION</span><span class="fact-value">IPSWICH QLD</span></div>
+          <div class="fact-row"><span class="fact-label">FORMAT</span><span class="fact-value">INDOOR WHOOP</span></div>
+          <div class="fact-row"><span class="fact-label">CLASSES</span><span class="fact-value">1S · 2S</span></div>
+          <div class="fact-row"><span class="fact-label">PILOTS</span><span class="fact-value">10 &amp; GROWING</span></div>
+          <div class="fact-row"><span class="fact-label">VENUE</span><span class="fact-value">TBC</span></div>
+        </div>
+
+        <!-- Join CTA -->
+        <div class="s-widget">
+          <div class="s-widget-head">GET INVOLVED</div>
+          <div class="join-cta">
+            <div class="join-cta-title">READY TO FLY?</div>
+            <p class="join-cta-body">Join the crew, meet other pilots and be part of Ipswich's FPV community from the ground up.</p>
+            <a href="membership.html" class="btn-cta">JOIN IWC &nbsp;›</a>
+            <div style="margin-top:12px;"></div>
+            <a href="https://discord.gg/YeMymfwMJP" class="btn-cta" style="border-color:rgba(88,101,242,0.5);color:#7289DA;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.028.015.054.035.07 2.052 1.527 4.044 2.451 6.006 3.062a.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 12.953 12.953 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028c1.972-.614 3.966-1.539 6.019-3.063a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+              JOIN DISCORD
+            </a>
+          </div>
+        </div>
+
+        <!-- Contact link -->
+        <div class="s-widget">
+          <div class="s-widget-head">CONTACT</div>
+          <div style="padding:0 0 6px;">
+            <a href="contact.html" class="btn-sm-outline" style="margin-top:14px;">SEND US A MESSAGE <span>›</span></a>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div>
+      <div class="ft-brand-name">IPSWICH WHOOP CLUB</div>
+      <div class="ft-brand-sub">FPV WHOOP RACING &bull; IPSWICH, QLD</div>
+      <div class="ft-hb"><svg width="110" height="22" viewBox="0 0 110 22" fill="none"><polyline points="0,11 22,11 27,3 32,19 37,3 42,19 48,11 68,11 73,5 78,17 83,11 110,11" stroke="#1B8AB0" stroke-width="1.5" fill="none" opacity="0.55"/></svg></div>
+    </div>
+    <div class="ft-tagline">SEND IT.<span class="line2">EVERY PACK.</span></div>
+    <div class="ft-right">
+      <div class="ft-copy">&copy; 2026 IPSWICH WHOOP CLUB INC.<br>ALL RIGHTS RESERVED.</div>
+      <div class="social-row">
+        <a href="https://discord.gg/YeMymfwMJP" class="social-btn" aria-label="Discord"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.028.015.054.035.07 2.052 1.527 4.044 2.451 6.006 3.062a.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 12.953 12.953 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028c1.972-.614 3.966-1.539 6.019-3.063a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></a>
+        <a href="#" class="social-btn" aria-label="Instagram"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://www.facebook.com/groups/2854211838310669/" class="social-btn" aria-label="Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
