@@ -375,24 +375,6 @@
       inset: 0;
       background: radial-gradient(ellipse at center, rgba(34, 168, 216, 0.18) 0%, transparent 70%);
     }
-    .hero-drone-placeholder {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      border: 1px dashed var(--border-b);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--text-muted);
-      text-align: center;
-      line-height: 1.8;
-    }
-    .hero-drone-placeholder svg { opacity: 0.4; }
 
     /* ── FEATURE CARDS ───────────────────────────────────────── */
     .feature-row {
@@ -758,19 +740,81 @@
             Example: <img src="assets/hero-drone.jpg" alt="IWC whoop drone in action">
           -->
           <div class="hero-img-wrap" aria-hidden="true">
-            <div class="hero-drone-placeholder">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="10" stroke="#22A8D8" stroke-width="1.5"/>
-                <circle cx="10" cy="10" r="6"  stroke="#22A8D8" stroke-width="1"/>
-                <circle cx="38" cy="10" r="6"  stroke="#22A8D8" stroke-width="1"/>
-                <circle cx="10" cy="38" r="6"  stroke="#22A8D8" stroke-width="1"/>
-                <circle cx="38" cy="38" r="6"  stroke="#22A8D8" stroke-width="1"/>
-                <line x1="16" y1="16" x2="32" y2="32" stroke="#22A8D8" stroke-width="1"/>
-                <line x1="32" y1="16" x2="16" y2="32" stroke="#22A8D8" stroke-width="1"/>
-              </svg>
-              DRONE IMAGE<br>Replace with<br>your own photo
-            </div>
-          </div>
+  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"
+       width="220" height="220" style="display:block; margin:auto;">
+    <defs>
+      <filter id="drone-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <radialGradient id="drone-bg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#22A8D8" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#22A8D8" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Background glow -->
+    <circle cx="100" cy="100" r="98" fill="url(#drone-bg)"/>
+
+    <!-- Arms -->
+    <line x1="76" y1="76" x2="124" y2="124" stroke="#1B8AB0" stroke-width="6" stroke-linecap="round"/>
+    <line x1="124" y1="76" x2="76" y2="124" stroke="#1B8AB0" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Top-left prop (CW) -->
+    <g transform="translate(44,44)">
+      <circle r="32" stroke="#22A8D8" stroke-width="2" filter="url(#drone-glow)"/>
+      <circle r="21" stroke="#22A8D8" stroke-width="0.75" stroke-dasharray="4 2" opacity="0.45"/>
+      <g><ellipse rx="17" ry="5" fill="#22A8D8" fill-opacity="0.28"/>
+         <ellipse rx="5" ry="17" fill="#22A8D8" fill-opacity="0.28"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="0.5s" repeatCount="indefinite"/>
+      </g>
+      <circle r="5.5" fill="#08080F" stroke="#22A8D8" stroke-width="1.5"/>
+      <circle r="2" fill="#22A8D8"/>
+    </g>
+
+    <!-- Top-right prop (CCW) -->
+    <g transform="translate(156,44)">
+      <circle r="32" stroke="#22A8D8" stroke-width="2" filter="url(#drone-glow)"/>
+      <circle r="21" stroke="#22A8D8" stroke-width="0.75" stroke-dasharray="4 2" opacity="0.45"/>
+      <g><ellipse rx="17" ry="5" fill="#22A8D8" fill-opacity="0.28"/>
+         <ellipse rx="5" ry="17" fill="#22A8D8" fill-opacity="0.28"/>
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="0.5s" repeatCount="indefinite"/>
+      </g>
+      <circle r="5.5" fill="#08080F" stroke="#22A8D8" stroke-width="1.5"/>
+      <circle r="2" fill="#22A8D8"/>
+    </g>
+
+    <!-- Bottom-left prop (CCW) -->
+    <g transform="translate(44,156)">
+      <circle r="32" stroke="#22A8D8" stroke-width="2" filter="url(#drone-glow)"/>
+      <circle r="21" stroke="#22A8D8" stroke-width="0.75" stroke-dasharray="4 2" opacity="0.45"/>
+      <g><ellipse rx="17" ry="5" fill="#22A8D8" fill-opacity="0.28"/>
+         <ellipse rx="5" ry="17" fill="#22A8D8" fill-opacity="0.28"/>
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="0.5s" repeatCount="indefinite"/>
+      </g>
+      <circle r="5.5" fill="#08080F" stroke="#22A8D8" stroke-width="1.5"/>
+      <circle r="2" fill="#22A8D8"/>
+    </g>
+
+    <!-- Bottom-right prop (CW) -->
+    <g transform="translate(156,156)">
+      <circle r="32" stroke="#22A8D8" stroke-width="2" filter="url(#drone-glow)"/>
+      <circle r="21" stroke="#22A8D8" stroke-width="0.75" stroke-dasharray="4 2" opacity="0.45"/>
+      <g><ellipse rx="17" ry="5" fill="#22A8D8" fill-opacity="0.28"/>
+         <ellipse rx="5" ry="17" fill="#22A8D8" fill-opacity="0.28"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="0.5s" repeatCount="indefinite"/>
+      </g>
+      <circle r="5.5" fill="#08080F" stroke="#22A8D8" stroke-width="1.5"/>
+      <circle r="2" fill="#22A8D8"/>
+    </g>
+
+    <!-- Centre body / camera -->
+    <circle cx="100" cy="100" r="22" fill="#08080F" stroke="#22A8D8" stroke-width="2.5" filter="url(#drone-glow)"/>
+    <circle cx="100" cy="100" r="14" stroke="#22A8D8" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.6"/>
+    <circle cx="100" cy="100" r="8"  fill="#22A8D8" fill-opacity="0.2" stroke="#22A8D8" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="3"  fill="#22A8D8"/>
+  </svg>
+</div>
         </section>
 
         <!-- FEATURE CARDS -->
