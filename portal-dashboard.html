@@ -10,13 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:           #08080F; --bg-2:       #0C0C1A; --bg-card:    #0F0F1E;
-      --bg-card-h:    #131328; --primary:    #1B8AB0; --primary-b:  #22A8D8;
-      --primary-glow: rgba(34,168,216,0.25); --primary-dim: rgba(34,168,216,0.07);
-      --green:        #00E676; --green-dim:  rgba(0,230,118,0.1);
-      --text:         #DDE0F0; --text-dim:   #7A7AA0;
-      --text-muted:   #484870; --border:     #18183A; --border-b:   #222248;
-      --nav-bg:       #09091A; --red:        #FF4444;
+      --bg:#08080F; --bg-2:#0C0C1A; --bg-card:#0F0F1E; --bg-card-h:#131328;
+      --primary:#1B8AB0; --primary-b:#22A8D8; --primary-glow:rgba(34,168,216,0.25);
+      --primary-dim:rgba(34,168,216,0.07); --green:#00E676; --green-dim:rgba(0,230,118,0.1);
+      --text:#DDE0F0; --text-dim:#7A7AA0; --text-muted:#484870;
+      --border:#18183A; --border-b:#222248; --nav-bg:#09091A; --red:#FF4444;
     }
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     html { scroll-behavior:smooth; }
@@ -24,37 +22,12 @@
     ul   { list-style:none; }
     body { background:var(--bg); color:var(--text); font-family:'Exo 2',sans-serif; font-size:14px; line-height:1.6; min-height:100vh; }
 
-    /* ── AUTH LOADING OVERLAY ────────────────────────────────────
-       Shown immediately on page load. Hidden by JS once Firebase
-       confirms the user is logged in. If not logged in, JS
-       redirects to portal.html before this is ever hidden.       */
-    #auth-gate {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      z-index: 9999;
-    }
-    .auth-gate-spinner {
-      width: 48px; height: 48px;
-      border: 2px solid var(--border-b);
-      border-top-color: var(--primary-b);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .auth-gate-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--text-muted);
-      animation: blink 1.6s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    /* ── AUTH GATE ── */
+    #auth-gate { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:9999; }
+    .auth-gate-spinner { width:48px; height:48px; border:2px solid var(--border-b); border-top-color:var(--primary-b); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .auth-gate-label { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.2em; color:var(--text-muted); animation:blink 1.6s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
 
     /* ── TOP BAR ── */
     .topbar { background:#040409; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; padding:5px 28px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--text-muted); }
@@ -80,28 +53,14 @@
     .nav-links{display:flex;flex:1;overflow-x:auto;} .nav-links::-webkit-scrollbar{display:none;}
     .nav-links li a { display:flex; align-items:center; height:48px; padding:0 20px; font-family:'Orbitron',monospace; font-size:10.5px; font-weight:600; letter-spacing:0.13em; color:var(--text-dim); white-space:nowrap; border-right:1px solid var(--border); transition:color 0.18s,background 0.18s; }
     .nav-links li a:hover{color:var(--primary-b);background:var(--primary-dim);}
-    .nav-links li a.active{color:var(--text);background:rgba(34,168,216,0.1);border-bottom:2px solid var(--primary-b);}
-    .nav-links li a.active::before{content:'▶ ';color:var(--primary-b);}
-    .nav-links li a.active::after{content:' ◀';color:var(--primary-b);}
-
-    /* Logout button in nav */
-    .nav-logout {
-      display:flex; align-items:center; gap:8px;
-      height:48px; padding:0 22px;
-      font-family:'Orbitron',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.13em;
-      color:var(--red); background:rgba(255,68,68,0.07);
-      border-left:2px solid rgba(255,68,68,0.4);
-      white-space:nowrap; cursor:pointer;
-      transition:background 0.18s,border-color 0.18s;
-      border-top:none; border-bottom:none; border-right:none;
-    }
+    .nav-logout { display:flex; align-items:center; gap:8px; height:48px; padding:0 22px; font-family:'Orbitron',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.13em; color:var(--red); background:rgba(255,68,68,0.07); border-left:2px solid rgba(255,68,68,0.4); white-space:nowrap; cursor:pointer; transition:background 0.18s,border-color 0.18s; border-top:none; border-bottom:none; border-right:none; }
     .nav-logout:hover { background:rgba(255,68,68,0.15); border-left-color:var(--red); }
 
     /* ── LAYOUT ── */
     .page-wrap { max-width:1440px; margin:0 auto; padding:20px 28px 0; }
-    .content-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start; margin-top:20px; }
+    .content-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start; }
     .left-col { display:flex; flex-direction:column; gap:2px; }
-    .sidebar  { display:flex; flex-direction:column; gap:20px; }
+    .sidebar { display:flex; flex-direction:column; gap:20px; }
 
     /* ── PAGE HERO ── */
     .page-hero { background:var(--bg-card); border:1px solid var(--border); border-bottom:none; padding:28px 36px; position:relative; overflow:hidden; }
@@ -120,69 +79,83 @@
       align-items: center;
       gap: 24px;
     }
+
+    /* Avatar + picker */
+    .avatar-wrap { position: relative; flex-shrink: 0; }
     .pilot-avatar {
-      width: 64px; height: 64px;
+      width: 72px; height: 72px;
       border-radius: 50%;
       border: 2px solid var(--primary);
       background: var(--bg-2);
-      display: flex; align-items:center; justify-content:center;
-      font-size: 28px;
-      flex-shrink: 0;
-      box-shadow: 0 0 16px var(--primary-glow);
-    }
-    .welcome-text { flex: 1; }
-    .welcome-greeting {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      margin-bottom: 4px;
-    }
-    .welcome-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 0.06em;
-      word-break: break-all;
-    }
-    .welcome-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-      padding: 4px 12px;
-      background: var(--green-dim);
-      border: 1px solid rgba(0,230,118,0.2);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--green);
-      letter-spacing: 0.12em;
-    }
-    .status-pip { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 5px var(--green); animation:blink 2s ease-in-out infinite; }
-
-    /* ── PORTAL FEATURE CARDS ── */
-    .portal-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-top: none;
-    }
-    .portal-card {
-      background: var(--bg-card);
-      padding: 22px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-b);
       cursor: pointer;
-      transition: background 0.18s;
       position: relative;
       overflow: hidden;
-      text-decoration: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 16px var(--primary-glow);
     }
-    .portal-card:hover { background: var(--bg-card-h); }
+    .pilot-avatar:hover { border-color: var(--primary-b); box-shadow: 0 0 24px var(--primary-glow); }
+    .pilot-avatar svg { width: 38px; height: 38px; }
+    .avatar-hint {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(27,138,176,0.88);
+      font-family: 'Orbitron', monospace; font-size: 7px; font-weight: 700;
+      letter-spacing: 0.1em; color: white; text-align: center; padding: 3px 0;
+      opacity: 0; transition: opacity 0.18s;
+    }
+    .pilot-avatar:hover .avatar-hint { opacity: 1; }
+
+    /* Avatar picker dropdown */
+    .avatar-picker {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      z-index: 300;
+      width: 230px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px var(--primary-glow);
+    }
+    .avatar-picker.hidden { display: none; }
+    .avatar-picker-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Orbitron', monospace; font-size: 9.5px; font-weight: 700;
+      letter-spacing: 0.15em; color: var(--primary-b);
+    }
+    .avatar-picker-head::before { content: '// '; opacity: 0.6; }
+    .avatar-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; padding: 12px;
+    }
+    .avatar-option {
+      aspect-ratio: 1;
+      border: 2px solid var(--border-b);
+      background: var(--bg-2);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 5px; cursor: pointer; color: var(--text-dim);
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+      padding: 6px;
+    }
+    .avatar-option:hover { border-color: var(--primary); color: var(--primary-b); }
+    .avatar-option.selected { border-color: var(--primary-b); color: var(--primary-b); background: rgba(34,168,216,0.1); }
+    .avatar-option svg { width: 26px; height: 26px; }
+    .avatar-option-name { font-family:'Orbitron',monospace; font-size:7px; font-weight:700; letter-spacing:0.08em; }
+
+    /* Welcome text */
+    .welcome-text { flex: 1; }
+    .welcome-greeting { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:0.12em; margin-bottom:4px; }
+    .welcome-callsign { font-family:'Orbitron',monospace; font-size:22px; font-weight:900; color:var(--text); letter-spacing:0.06em; margin-bottom:4px; }
+    .welcome-email { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:0.06em; margin-bottom:10px; }
+    .welcome-status { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; background:var(--green-dim); border:1px solid rgba(0,230,118,0.2); font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--green); letter-spacing:0.12em; }
+    .status-pip { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 5px var(--green); animation:blink 2s ease-in-out infinite; }
+
+    /* ── PORTAL CARDS ── */
+    .portal-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-top:none; }
+    .portal-card { background:var(--bg-card); padding:22px 24px; display:flex; flex-direction:column; gap:8px; cursor:pointer; transition:background 0.18s; position:relative; overflow:hidden; text-decoration:none; }
+    .portal-card:hover { background:var(--bg-card-h); }
     .portal-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--primary); transform:scaleX(0); transform-origin:left; transition:transform 0.25s ease; }
     .portal-card:hover::after { transform:scaleX(1); }
     .portal-card.disabled { cursor:default; opacity:0.5; }
@@ -191,34 +164,20 @@
     .pc-icon  { font-size:26px; line-height:1; margin-bottom:4px; }
     .pc-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; letter-spacing:0.12em; color:var(--primary-b); }
     .pc-desc  { font-size:12.5px; color:var(--text-dim); line-height:1.65; flex:1; }
-    .pc-badge {
-      display:inline-block; padding:2px 8px;
-      font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:0.12em;
-      color:var(--text-muted); border:1px solid var(--border-b);
-      align-self:flex-start; margin-top:4px;
-    }
+    .pc-badge { display:inline-block; padding:2px 8px; font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:0.12em; color:var(--text-muted); border:1px solid var(--border-b); align-self:flex-start; margin-top:4px; }
     .pc-badge.live { color:var(--green); border-color:rgba(0,230,118,0.25); background:var(--green-dim); }
 
-    /* ── SIDEBAR WIDGETS ── */
+    /* ── SIDEBAR ── */
     .s-widget { background:var(--bg-card); border:1px solid var(--border); }
     .s-widget-head { padding:13px 18px; border-bottom:1px solid var(--border); font-family:'Orbitron',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.17em; color:var(--primary-b); }
     .s-widget-head::before { content:'// '; opacity:0.6; }
-
     .info-row { display:flex; align-items:baseline; justify-content:space-between; padding:11px 18px; border-bottom:1px solid var(--border); gap:12px; }
     .info-row:last-child { border-bottom:none; }
     .info-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:0.1em; }
-    .info-value { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--primary-b); letter-spacing:0.06em; text-align:right; }
+    .info-value { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--primary-b); letter-spacing:0.06em; text-align:right; overflow-wrap:anywhere; }
     .info-value.green { color:var(--green); }
-
-    .btn-logout-full {
-      display:flex; align-items:center; justify-content:center; gap:10px;
-      margin:16px 18px; padding:11px 16px;
-      border:1px solid rgba(255,68,68,0.3); background:rgba(255,68,68,0.05);
-      font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:0.12em;
-      color:var(--red); cursor:pointer; transition:background 0.18s,border-color 0.18s;
-    }
+    .btn-logout-full { display:flex; align-items:center; justify-content:center; gap:10px; margin:16px 18px; padding:11px 16px; border:1px solid rgba(255,68,68,0.3); background:rgba(255,68,68,0.05); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:0.12em; color:var(--red); cursor:pointer; transition:background 0.18s,border-color 0.18s; }
     .btn-logout-full:hover { background:rgba(255,68,68,0.12); border-color:var(--red); }
-
     .ann-item { padding:14px 18px; border-bottom:1px solid var(--border); }
     .ann-item:last-child { border-bottom:none; }
     .ann-top { display:flex; align-items:flex-start; gap:9px; margin-bottom:6px; }
@@ -228,17 +187,17 @@
     .ann-body { font-size:12px; color:var(--text-dim); line-height:1.65; padding-left:16px; }
 
     /* ── FOOTER ── */
-    .site-footer{margin-top:20px;border-top:1px solid var(--border);background:var(--bg-2);padding:26px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:24px;}
-    .ft-brand-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--primary-b);letter-spacing:0.1em;margin-bottom:4px;}
-    .ft-brand-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.15em;}
-    .ft-hb{margin-top:14px;}
-    .ft-tagline{text-align:center;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--primary);letter-spacing:0.15em;line-height:1.7;}
-    .ft-tagline .line2{display:block;}
-    .ft-right{text-align:right;}
-    .ft-copy{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--text-muted);letter-spacing:0.08em;line-height:1.9;margin-bottom:14px;}
-    .social-row{display:flex;gap:10px;justify-content:flex-end;}
-    .social-btn{width:34px;height:34px;border:1px solid var(--border-b);display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:border-color 0.18s,color 0.18s;}
-    .social-btn:hover{border-color:var(--primary);color:var(--primary-b);}
+    .site-footer { margin-top:20px; border-top:1px solid var(--border); background:var(--bg-2); padding:26px 28px; display:grid; grid-template-columns:1fr 1fr 1fr; align-items:center; gap:24px; }
+    .ft-brand-name { font-family:'Orbitron',monospace; font-size:13px; font-weight:700; color:var(--primary-b); letter-spacing:0.1em; margin-bottom:4px; }
+    .ft-brand-sub  { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:0.15em; }
+    .ft-hb { margin-top:14px; }
+    .ft-tagline { text-align:center; font-family:'Orbitron',monospace; font-size:15px; font-weight:900; color:var(--primary); letter-spacing:0.15em; line-height:1.7; }
+    .ft-tagline .line2 { display:block; }
+    .ft-right { text-align:right; }
+    .ft-copy { font-family:'Share Tech Mono',monospace; font-size:9.5px; color:var(--text-muted); letter-spacing:0.08em; line-height:1.9; margin-bottom:14px; }
+    .social-row { display:flex; gap:10px; justify-content:flex-end; }
+    .social-btn { width:34px; height:34px; border:1px solid var(--border-b); display:flex; align-items:center; justify-content:center; color:var(--text-dim); transition:border-color 0.18s,color 0.18s; }
+    .social-btn:hover { border-color:var(--primary); color:var(--primary-b); }
 
     /* ── RESPONSIVE ── */
     @media (max-width:1100px) { .content-grid{grid-template-columns:1fr;} .widget-battery,.widget-status{display:none;} .site-header{grid-template-columns:auto 1fr;} }
@@ -248,21 +207,16 @@
 </head>
 <body>
 
-  <!-- AUTH GATE — visible until Firebase confirms login -->
-  <div id="auth-gate" aria-label="Checking authentication">
-    <div class="auth-gate-spinner" aria-hidden="true"></div>
+  <!-- AUTH GATE -->
+  <div id="auth-gate">
+    <div class="auth-gate-spinner"></div>
     <div class="auth-gate-label">AUTHENTICATING...</div>
   </div>
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-pip" aria-hidden="true"></div>
-      PILOT PORTAL — MEMBERS ONLY
-    </div>
-    <div class="topbar-right">
-      <span>FPV RACING</span> &bull; <span>COMMUNITY</span> &bull; <span>PROGRESSION</span>
-    </div>
+    <div class="topbar-left"><div class="topbar-pip"></div>PILOT PORTAL — MEMBERS ONLY</div>
+    <div class="topbar-right"><span>FPV RACING</span> &bull; <span>COMMUNITY</span> &bull; <span>PROGRESSION</span></div>
   </div>
 
   <!-- HEADER -->
@@ -281,7 +235,7 @@
   </header>
 
   <!-- NAV -->
-  <nav class="site-nav" aria-label="Main navigation">
+  <nav class="site-nav">
     <ul class="nav-links">
       <li><a href="index.html"     >HOME</a></li>
       <li><a href="events.html"    >EVENTS</a></li>
@@ -292,134 +246,135 @@
       <li><a href="about.html"     >ABOUT</a></li>
       <li><a href="contact.html"   >CONTACT</a></li>
     </ul>
-    <button class="nav-logout" id="logout-btn" aria-label="Sign out">
-      <svg width="13" height="14" viewBox="0 0 13 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-        <path d="M5 7h7M9 4.5l3 2.5-3 2.5"/><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"/>
-      </svg>
+    <button class="nav-logout" id="logout-btn">
+      <svg width="13" height="14" viewBox="0 0 13 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7h7M9 4.5l3 2.5-3 2.5"/><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"/></svg>
       LOGOUT
     </button>
   </nav>
 
-  <!-- MAIN — hidden until auth confirmed -->
+  <!-- MAIN -->
   <main class="page-wrap" id="main-content" style="display:none;">
 
-    <!-- Page banner -->
     <div class="page-hero">
       <p class="page-eyebrow">// AUTHENTICATED</p>
       <h1 class="page-title">PILOT PORTAL</h1>
       <p class="page-subtitle">IPSWICH WHOOP CLUB — MEMBER DASHBOARD</p>
     </div>
 
-    <!-- Welcome strip -->
+    <!-- Welcome card -->
     <div class="welcome-card">
-      <div class="pilot-avatar" aria-hidden="true">✈️</div>
+
+      <!-- Avatar with picker -->
+      <div class="avatar-wrap" id="avatar-wrap">
+        <button class="pilot-avatar" id="avatar-btn" onclick="togglePicker()" aria-label="Change avatar">
+          <div id="avatar-display"><!-- SVG injected by JS --></div>
+          <div class="avatar-hint">CHANGE</div>
+        </button>
+
+        <div class="avatar-picker hidden" id="avatar-picker">
+          <div class="avatar-picker-head">SELECT AVATAR</div>
+          <div class="avatar-grid" id="avatar-grid">
+            <!-- Options injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Pilot info -->
       <div class="welcome-text">
         <div class="welcome-greeting">WELCOME BACK, PILOT</div>
-        <!-- pilot email injected here by JS -->
-        <div class="welcome-name" id="pilot-email">—</div>
+        <!--
+          CALLSIGN comes from Firebase Auth > Users > Display Name.
+          To set a callsign: Firebase Console → Authentication → Users
+          → click the pencil icon next to the user → set Display Name
+          to their callsign (e.g. "GHOST", "ZIPPY", "NOVA").
+        -->
+        <div class="welcome-callsign" id="pilot-callsign">—</div>
+        <div class="welcome-email"    id="pilot-email">—</div>
         <div class="welcome-status">
-          <div class="status-pip" aria-hidden="true"></div>
+          <div class="status-pip"></div>
           ACTIVE MEMBER
         </div>
       </div>
     </div>
 
-    <!-- Portal feature cards -->
-    <div class="portal-cards" role="list">
-
-      <a href="events.html" class="portal-card" role="listitem">
-        <div class="pc-icon" aria-hidden="true">🏁</div>
+    <!-- Portal cards -->
+    <div class="portal-cards">
+      <a href="events.html" class="portal-card">
+        <div class="pc-icon">🏁</div>
         <div class="pc-title">EVENTS</div>
-        <p class="pc-desc">View upcoming race days, practice sessions and social meets.</p>
+        <p class="pc-desc">Upcoming race days, practice sessions and social meets.</p>
         <span class="pc-badge live">LIVE</span>
       </a>
-
-      <div class="portal-card disabled" role="listitem" aria-disabled="true">
-        <div class="pc-icon" aria-hidden="true">📊</div>
+      <div class="portal-card disabled">
+        <div class="pc-icon">📊</div>
         <div class="pc-title">MY RESULTS</div>
-        <p class="pc-desc">Your personal race results and lap time history.</p>
+        <p class="pc-desc">Personal race results and lap time history.</p>
         <span class="pc-badge">COMING SOON</span>
       </div>
-
-      <div class="portal-card disabled" role="listitem" aria-disabled="true">
-        <div class="pc-icon" aria-hidden="true">🏆</div>
+      <div class="portal-card disabled">
+        <div class="pc-icon">🏆</div>
         <div class="pc-title">RANKINGS</div>
         <p class="pc-desc">Season standings and pilot rankings across all classes.</p>
         <span class="pc-badge">COMING SOON</span>
       </div>
-
-      <div class="portal-card disabled" role="listitem" aria-disabled="true">
-        <div class="pc-icon" aria-hidden="true">👤</div>
+      <div class="portal-card disabled">
+        <div class="pc-icon">👤</div>
         <div class="pc-title">MY PROFILE</div>
         <p class="pc-desc">Update your callsign, contact details and membership info.</p>
         <span class="pc-badge">COMING SOON</span>
       </div>
-
-      <div class="portal-card disabled" role="listitem" aria-disabled="true">
-        <div class="pc-icon" aria-hidden="true">🔧</div>
+      <div class="portal-card disabled">
+        <div class="pc-icon">🔧</div>
         <div class="pc-title">MY BUILDS</div>
         <p class="pc-desc">Log your whoop builds, components and tune notes.</p>
         <span class="pc-badge">COMING SOON</span>
       </div>
-
-      <a href="https://discord.gg/YeMymfwMJP" class="portal-card" role="listitem" target="_blank" rel="noopener">
-        <div class="pc-icon" aria-hidden="true">💬</div>
+      <a href="https://discord.gg/YeMymfwMJP" class="portal-card" target="_blank" rel="noopener">
+        <div class="pc-icon">💬</div>
         <div class="pc-title">DISCORD</div>
-        <p class="pc-desc">Jump into the club Discord for chat, help and event updates.</p>
+        <p class="pc-desc">Jump in for chat, help and event announcements.</p>
         <span class="pc-badge live">LIVE</span>
       </a>
-
     </div>
 
-    <!-- Two-column below cards -->
-    <div class="content-grid">
+    <!-- Two-column below -->
+    <div class="content-grid" style="margin-top:20px;">
       <div class="left-col">
-
         <div class="s-widget" style="border-top:none;">
           <div class="s-widget-head">ANNOUNCEMENTS</div>
           <div class="ann-item">
-            <div class="ann-top"><div class="ann-sq" aria-hidden="true"></div><div class="ann-title">WEBSITE LAUNCHED</div><div class="ann-date">21/06/2026</div></div>
-            <p class="ann-body">Welcome to the new IWC website and pilot portal. More features are on the way.</p>
+            <div class="ann-top"><div class="ann-sq"></div><div class="ann-title">WEBSITE LAUNCHED</div><div class="ann-date">21/06/2026</div></div>
+            <p class="ann-body">Welcome to the new IWC website and pilot portal. More features on the way.</p>
           </div>
           <div class="ann-item">
-            <div class="ann-top"><div class="ann-sq" aria-hidden="true"></div><div class="ann-title">CLUB INCORPORATED!</div><div class="ann-date">18/06/2026</div></div>
+            <div class="ann-top"><div class="ann-sq"></div><div class="ann-title">CLUB INCORPORATED!</div><div class="ann-date">18/06/2026</div></div>
             <p class="ann-body">Ipswich Whoop Club is now an Incorporated Association. Big things ahead!</p>
           </div>
           <div class="ann-item">
-            <div class="ann-top"><div class="ann-sq" aria-hidden="true"></div><div class="ann-title">VENUE SEARCH IN PROGRESS</div><div class="ann-date">24/05/2026</div></div>
-            <p class="ann-body">We're working hard to lock in a regular indoor racing venue. Stay tuned.</p>
+            <div class="ann-top"><div class="ann-sq"></div><div class="ann-title">VENUE SEARCH IN PROGRESS</div><div class="ann-date">24/05/2026</div></div>
+            <p class="ann-body">Working hard to lock in a regular indoor venue. Stay tuned.</p>
           </div>
         </div>
-
       </div>
 
-      <!-- Sidebar -->
       <aside class="sidebar">
-
-        <!-- Account info -->
         <div class="s-widget">
           <div class="s-widget-head">MY ACCOUNT</div>
+          <div class="info-row"><span class="info-label">CALLSIGN</span><span class="info-value" id="pilot-callsign-2">—</span></div>
           <div class="info-row"><span class="info-label">STATUS</span><span class="info-value green">ACTIVE</span></div>
           <div class="info-row"><span class="info-label">MEMBERSHIP</span><span class="info-value">MEMBER</span></div>
           <div class="info-row"><span class="info-label">SEASON</span><span class="info-value">2026</span></div>
-          <div class="info-row"><span class="info-label">EMAIL</span><span class="info-value" id="pilot-email-2" style="font-size:9px;letter-spacing:0.03em;">—</span></div>
+          <div class="info-row"><span class="info-label">EMAIL</span><span class="info-value" id="pilot-email-2" style="font-size:9px;letter-spacing:0.02em;">—</span></div>
           <button class="btn-logout-full" id="logout-btn-2">
-            <svg width="13" height="13" viewBox="0 0 13 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 7h7M9 4.5l3 2.5-3 2.5"/><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"/></svg>
+            <svg width="13" height="13" viewBox="0 0 13 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 7h7M9 4.5l3 2.5-3 2.5"/><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"/></svg>
             SIGN OUT
           </button>
         </div>
-
-        <!-- Upcoming events -->
         <div class="s-widget">
           <div class="s-widget-head">UPCOMING EVENTS</div>
-          <p style="padding:20px 18px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);line-height:1.9;text-align:center;">
-            No events scheduled yet.<br>Check back soon!
-          </p>
-          <a href="events.html" style="display:flex;align-items:center;justify-content:space-between;margin:0 18px 18px;padding:10px 16px;border:1px solid var(--border-b);font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--text-dim);transition:border-color 0.18s,color 0.18s;">
-            VIEW ALL EVENTS <span>›</span>
-          </a>
+          <p style="padding:20px 18px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);line-height:1.9;text-align:center;">No events scheduled yet.<br>Check back soon!</p>
+          <a href="events.html" style="display:flex;align-items:center;justify-content:space-between;margin:0 18px 18px;padding:10px 16px;border:1px solid var(--border-b);font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--text-dim);">VIEW ALL EVENTS <span>›</span></a>
         </div>
-
       </aside>
     </div>
 
@@ -443,12 +398,8 @@
     </div>
   </footer>
 
-  <!-- ============================================================
-       FIREBASE AUTH — PRE-FILLED WITH YOUR PROJECT CONFIG
-  ============================================================ -->
   <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged }
       from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
@@ -465,34 +416,94 @@
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // ── Auth gate ────────────────────────────────────────────────
-    // onAuthStateChanged fires once on load. If there's no user,
-    // send them back to the login page immediately.
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "portal.html";
-        return;
-      }
+    // ── Avatar definitions ────────────────────────────────────────
+    const AVATARS = [
+      { id: 0, name: 'WHOOP', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="1.5" fill="currentColor"/><line x1="17" y1="17" x2="10" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="23" y1="17" x2="30" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="23" x2="10" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="23" y1="23" x2="30" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="32" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="32" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="32" cy="32" r="5" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="29" y1="8" x2="35" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="32" y1="5" x2="32" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="5" y1="32" x2="11" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="29" x2="8" y2="35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="29" y1="32" x2="35" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="32" y1="29" x2="32" y2="35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+      { id: 1, name: 'GOGGLES', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="13" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="20" r="4" stroke="currentColor" stroke-width="1"/><circle cx="9" cy="20" r="1.5" fill="currentColor"/><rect x="23" y="13" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="31" cy="20" r="4" stroke="currentColor" stroke-width="1"/><circle cx="31" cy="20" r="1.5" fill="currentColor"/><line x1="17" y1="20" x2="23" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="0" y1="17" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="39" y1="17" x2="40" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>` },
+      { id: 2, name: 'PROP', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="3.5" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="1.5" fill="currentColor"/><ellipse cx="11" cy="12" rx="8" ry="3.5" transform="rotate(-40 11 12)" stroke="currentColor" stroke-width="1.2"/><ellipse cx="29" cy="12" rx="8" ry="3.5" transform="rotate(40 29 12)" stroke="currentColor" stroke-width="1.2"/><ellipse cx="11" cy="28" rx="8" ry="3.5" transform="rotate(40 11 28)" stroke="currentColor" stroke-width="1.2"/><ellipse cx="29" cy="28" rx="8" ry="3.5" transform="rotate(-40 29 28)" stroke="currentColor" stroke-width="1.2"/></svg>` },
+      { id: 3, name: 'CONTROLLER', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10" width="32" height="21" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="21" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="13" cy="21" r="2" fill="currentColor"/><circle cx="27" cy="21" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="27" cy="21" r="2" fill="currentColor"/><line x1="4" y1="17" x2="36" y2="17" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2 2"/><rect x="16" y="28" width="8" height="2.5" rx="1" stroke="currentColor" stroke-width="1"/></svg>` },
+      { id: 4, name: 'RACING', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="6" x2="8" y2="36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="8" y="6" width="26" height="18" stroke="currentColor" stroke-width="1.2"/><rect x="8"  y="6"  width="6.5" height="6" fill="currentColor"/><rect x="21.5" y="6"  width="6.5" height="6" fill="currentColor"/><rect x="14.5" y="12" width="6.5" height="6" fill="currentColor"/><rect x="27.5" y="12" width="6.5" height="6" fill="currentColor"/><rect x="8"    y="12" width="6.5" height="6"/><rect x="21.5" y="12" width="6.5" height="6"/><rect x="14.5" y="6"  width="6.5" height="6"/><rect x="27.5" y="6"  width="6.5" height="6"/></svg>` },
+      { id: 5, name: 'CROSSHAIR', svg: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="7"  stroke="currentColor" stroke-width="1.2"/><circle cx="20" cy="20" r="2"  fill="currentColor"/><line x1="20" y1="4"  x2="20" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="28" x2="20" y2="36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4"  y1="20" x2="12" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="28" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+    ];
 
-      // User is confirmed logged in — show the page
-      document.getElementById("auth-gate").style.display    = "none";
-      document.getElementById("main-content").style.display = "block";
-      document.getElementById("site-footer").style.display  = "grid";
+    const STORAGE_KEY = 'iwc_pilot_avatar';
 
-      // Fill in the pilot's email wherever it appears
-      const email = user.email || "pilot";
-      document.getElementById("pilot-email").textContent   = email;
-      document.getElementById("pilot-email-2").textContent = email;
-    });
+    function getSavedId()   { return parseInt(localStorage.getItem(STORAGE_KEY) || '0'); }
+    function saveId(id)     { localStorage.setItem(STORAGE_KEY, id); }
 
-    // ── Logout ───────────────────────────────────────────────────
-    async function doLogout() {
-      await signOut(auth);
-      window.location.href = "portal.html";
+    function renderAvatar(id) {
+      document.getElementById('avatar-display').innerHTML = AVATARS[id].svg;
     }
 
-    document.getElementById("logout-btn").addEventListener("click",   doLogout);
-    document.getElementById("logout-btn-2").addEventListener("click", doLogout);
+    function buildAvatarGrid(selectedId) {
+      const grid = document.getElementById('avatar-grid');
+      grid.innerHTML = '';
+      AVATARS.forEach(av => {
+        const btn = document.createElement('button');
+        btn.className = 'avatar-option' + (av.id === selectedId ? ' selected' : '');
+        btn.setAttribute('aria-label', av.name);
+        btn.innerHTML = av.svg + `<span class="avatar-option-name">${av.name}</span>`;
+        btn.addEventListener('click', () => {
+          saveId(av.id);
+          renderAvatar(av.id);
+          document.querySelectorAll('.avatar-option').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          closePicker();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    // ── Picker open/close ─────────────────────────────────────────
+    window.togglePicker = function() {
+      const picker = document.getElementById('avatar-picker');
+      picker.classList.toggle('hidden');
+      if (!picker.classList.contains('hidden')) {
+        buildAvatarGrid(getSavedId());
+      }
+    };
+
+    function closePicker() {
+      document.getElementById('avatar-picker').classList.add('hidden');
+    }
+
+    // Close picker when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('avatar-wrap').contains(e.target)) {
+        closePicker();
+      }
+    });
+
+    // ── Firebase auth ─────────────────────────────────────────────
+    onAuthStateChanged(auth, (user) => {
+      if (!user) { window.location.href = 'portal.html'; return; }
+
+      document.getElementById('auth-gate').style.display    = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      document.getElementById('site-footer').style.display  = 'grid';
+
+      // Callsign = displayName (set in Firebase Console → Authentication → Users → edit user → Display Name)
+      // Falls back to the part before @ in the email if no displayName is set
+      const callsign = user.displayName || user.email.split('@')[0].toUpperCase();
+      const email    = user.email;
+
+      document.getElementById('pilot-callsign').textContent   = callsign;
+      document.getElementById('pilot-callsign-2').textContent = callsign;
+      document.getElementById('pilot-email').textContent      = email;
+      document.getElementById('pilot-email-2').textContent    = email;
+
+      // Load saved avatar (default: WHOOP)
+      const savedId = getSavedId();
+      renderAvatar(savedId);
+    });
+
+    // ── Logout ────────────────────────────────────────────────────
+    async function doLogout() {
+      await signOut(auth);
+      window.location.href = 'portal.html';
+    }
+    document.getElementById('logout-btn').addEventListener('click',   doLogout);
+    document.getElementById('logout-btn-2').addEventListener('click', doLogout);
   </script>
 
 </body>
