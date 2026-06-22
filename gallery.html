@@ -208,14 +208,113 @@
       padding: 1px 5px;
     }
 
+    /* ── WALLPAPER DOWNLOADS ── */
+    .wallpaper-section {
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .wallpaper-section-head {
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Orbitron', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.17em;
+      color: var(--primary-b);
+    }
+    .wallpaper-section-head::before { content: '// '; opacity: 0.6; }
+    .wallpaper-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 20px 28px 28px;
+    }
+    .wallpaper-card {
+      background: var(--bg);
+      border: 1px solid var(--border-b);
+      overflow: hidden;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .wallpaper-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+    .wallpaper-thumb-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      position: relative;
+    }
+    .wallpaper-thumb-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: brightness(0.88);
+      transition: filter 0.2s, transform 0.3s;
+    }
+    .wallpaper-card:hover .wallpaper-thumb-wrap img {
+      filter: brightness(1);
+      transform: scale(1.03);
+    }
+    .wallpaper-type-badge {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 8px;
+      background: rgba(8,8,15,0.85);
+      border: 1px solid var(--border-b);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--primary-b);
+      letter-spacing: 0.1em;
+    }
+    .wallpaper-meta {
+      padding: 10px 12px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .wallpaper-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text);
+    }
+    .wallpaper-res {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+    .btn-dl {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin: 4px 12px 12px;
+      padding: 8px;
+      background: rgba(34,168,216,0.07);
+      border: 1px solid var(--primary);
+      font-family: 'Orbitron', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--primary-b);
+      transition: background 0.18s;
+      text-decoration: none;
+    }
+    .btn-dl:hover { background: rgba(34,168,216,0.2); }
+
     /* ── RESPONSIVE ── */
     @media (max-width:1100px) {
       .widget-battery,.widget-status { display:none; }
       .site-header { grid-template-columns:auto 1fr; }
       .gallery-grid { grid-template-columns:repeat(3,1fr); }
+      .wallpaper-grid { grid-template-columns:repeat(2,1fr); }
     }
     @media (max-width:720px) {
       .gallery-grid { grid-template-columns:repeat(2,1fr); }
+      .wallpaper-grid { grid-template-columns:repeat(2,1fr); }
       .site-footer  { grid-template-columns:1fr; text-align:center; }
       .social-row   { justify-content:center; }
       .ft-right     { text-align:center; }
@@ -275,13 +374,14 @@
     </div>
 
     <div class="tab-bar">
-      <div class="tab active">ALL</div>
-      <div class="tab">RACE DAYS</div>
-      <div class="tab">BUILDS</div>
-      <div class="tab">SOCIAL</div>
+      <div class="tab active" data-tab="photos" onclick="switchTab(this)">ALL PHOTOS</div>
+      <div class="tab" data-tab="photos" onclick="switchTab(this)">RACE DAYS</div>
+      <div class="tab" data-tab="photos" onclick="switchTab(this)">BUILDS</div>
+      <div class="tab" data-tab="photos" onclick="switchTab(this)">SOCIAL</div>
+      <div class="tab" data-tab="wallpapers" onclick="switchTab(this)">WALLPAPERS</div>
     </div>
 
-    <div class="gallery-panel">
+    <div class="gallery-panel" id="panel-photos">
 
       <!--
         ═══════════════════════════════════════════════════════════
@@ -339,10 +439,114 @@
         </div>
       </div>
 
-      
+      <!-- Instructions panel -->
+      <div class="gallery-instructions">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div>
+          <div class="gallery-instructions-title">ADDING PHOTOS TO THIS GALLERY</div>
+          <div class="gallery-instructions-body">
+            1. Create a folder at <code>assets/gallery/</code> in your repo and drop your images in.<br>
+            2. Remove the placeholder grid above (the comment block).<br>
+            3. Uncomment the <code>.gallery-grid</code> example and add a <code>.gallery-cell</code> for each photo.<br>
+            4. Recommended size: 1200×900px JPG at 80% quality for fast loading.
+          </div>
+        </div>
+      </div>
 
+    </div><!-- /gallery-panel -->
+
+    <!-- ── WALLPAPER DOWNLOADS ─────────────────────────────────── -->
+    <!--
+      FOLDER STRUCTURE:
+      Put the 4 wallpaper JPGs in your repo at:
+        assets/wallpapers/iwc-wallpaper-pc-1.jpg
+        assets/wallpapers/iwc-wallpaper-pc-2.jpg
+        assets/wallpapers/iwc-wallpaper-phone-1.jpg
+        assets/wallpapers/iwc-wallpaper-phone-2.jpg
+    -->
+    <div class="wallpaper-section" id="panel-wallpapers" style="display:none;">
+      <div class="wallpaper-section-head">CLUB WALLPAPERS — FREE DOWNLOAD</div>
+      <div class="wallpaper-grid">
+
+        <div class="wallpaper-card">
+          <div class="wallpaper-thumb-wrap">
+            <img src="assets/wallpapers/iwc-wallpaper-pc-1.jpg" alt="IWC PC Wallpaper — Dark Grid">
+            <div class="wallpaper-type-badge">PC</div>
+          </div>
+          <div class="wallpaper-meta">
+            <span class="wallpaper-title">DARK GRID</span>
+            <span class="wallpaper-res">1920 × 1080</span>
+          </div>
+          <a href="assets/wallpapers/iwc-wallpaper-pc-1.jpg"
+             download="IWC-Wallpaper-PC-DarkGrid.jpg" class="btn-dl">
+            ⬇ &nbsp;DOWNLOAD
+          </a>
+        </div>
+
+        <div class="wallpaper-card">
+          <div class="wallpaper-thumb-wrap">
+            <img src="assets/wallpapers/iwc-wallpaper-pc-2.jpg" alt="IWC PC Wallpaper — Split Lines">
+            <div class="wallpaper-type-badge">PC</div>
+          </div>
+          <div class="wallpaper-meta">
+            <span class="wallpaper-title">SPLIT LINES</span>
+            <span class="wallpaper-res">1920 × 1080</span>
+          </div>
+          <a href="assets/wallpapers/iwc-wallpaper-pc-2.jpg"
+             download="IWC-Wallpaper-PC-SplitLines.jpg" class="btn-dl">
+            ⬇ &nbsp;DOWNLOAD
+          </a>
+        </div>
+
+        <div class="wallpaper-card">
+          <div class="wallpaper-thumb-wrap">
+            <img src="assets/wallpapers/iwc-wallpaper-phone-1.jpg" alt="IWC Phone Wallpaper — Portrait Glow">
+            <div class="wallpaper-type-badge">PHONE</div>
+          </div>
+          <div class="wallpaper-meta">
+            <span class="wallpaper-title">PORTRAIT GLOW</span>
+            <span class="wallpaper-res">1080 × 1920</span>
+          </div>
+          <a href="assets/wallpapers/iwc-wallpaper-phone-1.jpg"
+             download="IWC-Wallpaper-Phone-PortraitGlow.jpg" class="btn-dl">
+            ⬇ &nbsp;DOWNLOAD
+          </a>
+        </div>
+
+        <div class="wallpaper-card">
+          <div class="wallpaper-thumb-wrap">
+            <img src="assets/wallpapers/iwc-wallpaper-phone-2.jpg" alt="IWC Phone Wallpaper — Minimal Lines">
+            <div class="wallpaper-type-badge">PHONE</div>
+          </div>
+          <div class="wallpaper-meta">
+            <span class="wallpaper-title">MINIMAL LINES</span>
+            <span class="wallpaper-res">1080 × 1920</span>
+          </div>
+          <a href="assets/wallpapers/iwc-wallpaper-phone-2.jpg"
+             download="IWC-Wallpaper-Phone-MinimalLines.jpg" class="btn-dl">
+            ⬇ &nbsp;DOWNLOAD
+          </a>
+        </div>
+
+      </div>
     </div>
+
   </main>
+
+  <script>
+    function switchTab(clickedTab) {
+      // Update tab active state
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      clickedTab.classList.add('active');
+
+      // Show/hide panels
+      const target = clickedTab.dataset.tab;
+      document.getElementById('panel-photos').style.display     = target === 'photos'     ? 'block' : 'none';
+      document.getElementById('panel-wallpapers').style.display = target === 'wallpapers' ? 'block' : 'none';
+    }
+  </script>
 
   <!-- FOOTER -->
   <footer class="site-footer">
