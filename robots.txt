@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block member portal from being indexed (private pages)
+Disallow: /portal.html
+Disallow: /portal-dashboard.html
+Disallow: /admin-results.html
+
+Sitemap: https://ipswichwhoop.club/sitemap.xml
