@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-FPXBZ2704S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-FPXBZ2704S');
-</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Membership — Ipswich Whoop Club</title>
@@ -17,18 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <meta name="keywords" content="join FPV drone racing club Ipswich, whoop club membership Queensland, FPV membership free, drone club Ipswich">
-<meta name="author"   content="Ipswich Whoop Club Inc.">
-<meta name="robots"   content="index, follow">
-<link rel="canonical" href="https://ipswichwhoop.club/membership.html">
-
-<meta property="og:type"        content="website">
-<meta property="og:url"         content="https://ipswichwhoop.club/membership.html">
-<meta property="og:title"       content="Membership — Ipswich Whoop Club">
-<meta property="og:description" content="Join Ipswich Whoop Club — free membership now open for junior, adult and life member categories. Be part of Ipswich's FPV racing community.">
-<meta property="og:image"       content="https://ipswichwhoop.club/assets/logo.png">
-<meta property="og:site_name"   content="Ipswich Whoop Club Inc.">
-<meta property="og:locale"      content="en_AU">
   <style>
     :root {
       --bg:           #08080F; --bg-2:       #0C0C1A; --bg-card:    #0F0F1E;
@@ -327,6 +306,158 @@
     }
     .note-item-body { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
 
+    /* ── FOUNDING MEMBER SECTION ─────────────────────────────── */
+    :root { --gold:#FFB400; --gold-b:#FFC933; --gold-dim:rgba(255,180,0,0.07); --gold-border:rgba(255,180,0,0.28); }
+
+    .founding-section {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-top: 4px solid var(--gold);
+      padding: 36px 40px 40px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2px;
+    }
+    .founding-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top, rgba(255,180,0,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .founding-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 32px;
+    }
+    .founding-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .founding-eyebrow::before { content: '// '; opacity: 0.55; }
+    .founding-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--gold-b);
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .founding-desc {
+      font-size: 13.5px;
+      color: rgba(255,180,0,0.72);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.05em;
+      line-height: 1.7;
+    }
+    .founding-counter {
+      text-align: center;
+      flex-shrink: 0;
+      background: rgba(255,180,0,0.06);
+      border: 1px solid var(--gold-border);
+      padding: 20px 28px;
+      min-width: 180px;
+    }
+    .counter-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: rgba(255,180,0,0.55);
+      margin-bottom: 6px;
+    }
+    .counter-nums {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      color: var(--gold-b);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .counter-claimed { font-size: 48px; }
+    .counter-sep     { font-size: 24px; opacity: 0.4; }
+    .counter-total   { font-size: 22px; opacity: 0.6; }
+    .counter-bar-wrap {
+      height: 6px;
+      background: rgba(255,180,0,0.12);
+      border: 1px solid rgba(255,180,0,0.2);
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .counter-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-b));
+      transition: width 0.8s ease;
+    }
+    .counter-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: rgba(255,180,0,0.5);
+    }
+
+    /* Perks grid */
+    .founding-perks {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 28px;
+    }
+    .founding-perk {
+      background: rgba(255,180,0,0.05);
+      border: 1px solid rgba(255,180,0,0.18);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .perk-icon  { font-size: 22px; line-height: 1; }
+    .perk-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--gold-b);
+    }
+    .perk-desc  { font-size: 12px; color: rgba(220,170,80,0.8); line-height: 1.6; }
+
+    .btn-founding {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--gold);
+      border: 2px solid var(--gold-b);
+      font-family: 'Orbitron', monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      color: #08080F;
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn-founding:hover {
+      background: var(--gold-b);
+      box-shadow: 0 0 32px rgba(255,180,0,0.35);
+    }
+    @media (max-width:860px) {
+      .founding-top    { grid-template-columns: 1fr; }
+      .founding-perks  { grid-template-columns: 1fr; }
+      .founding-counter { min-width: unset; }
+      .founding-section { padding: 24px 20px 28px; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width:1100px) {
       .widget-battery,.widget-status{display:none;} .site-header{grid-template-columns:auto 1fr;}
@@ -389,6 +520,49 @@
       <p class="page-subtitle">JUNIOR &bull; ADULT &bull; LIFE MEMBER</p>
     </div>
 
+    <!-- ── FOUNDING MEMBER SECTION ──────────────────────────── -->
+    <!--
+      UPDATE: change the data-claimed value below as founding members join.
+      Also update data-total if you change the number of founding spots.
+    -->
+    <div class="founding-section" id="founding-section"
+         data-claimed="0" data-total="20">
+
+      <div class="founding-top">
+        <div class="founding-left">
+          <div class="founding-eyebrow">LIMITED OPPORTUNITY</div>
+          <h2 class="founding-title">BECOME A<br>FOUNDING MEMBER</h2>
+          <p class="founding-desc">
+            Only 20 pilots will carry the title of IWC Founding Member.<br>
+            Join before our first race day and become part of the club's history.
+          </p>
+        </div>
+      </div>
+
+      <div class="founding-perks">
+        <div class="founding-perk">
+          <div class="perk-icon">⭐</div>
+          <div class="perk-title">FOUNDING MEMBER BADGE</div>
+          <p class="perk-desc">A permanent gold badge displayed on your pilot portal profile for the lifetime of the club. Every pilot who logs in will see it.</p>
+        </div>
+        <div class="founding-perk">
+          <div class="perk-icon">🏷</div>
+          <div class="perk-title">IWC FOUNDING STICKER</div>
+          <p class="perk-desc">An exclusive Ipswich Whoop Club founding member sticker. A little bit of history to put on your case, your goggles or your radio.</p>
+        </div>
+        <div class="founding-perk">
+          <div class="perk-icon">🏆</div>
+          <div class="perk-title">PERMANENT RECOGNITION</div>
+          <p class="perk-desc">Your name permanently listed as a founding member of Ipswich Whoop Club Inc. on our website. You were here from the start.</p>
+        </div>
+      </div>
+
+      <a href="membership-form.html" class="btn-founding">
+        ⭐ &nbsp;CLAIM YOUR FOUNDING MEMBERSHIP — FREE &nbsp;›
+      </a>
+
+    </div>
+
     <!-- Free period banner -->
     <div class="free-notice" role="note">
       <div class="free-notice-dot" aria-hidden="true"></div>
@@ -412,7 +586,7 @@
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Race day participation</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club Discord access</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club newsletter &amp; announcements</li>
-           
+            <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club insurance coverage</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Pilot progression support</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Eligible for junior rankings</li>
             <li class="tier-feature"><span class="feat-check no" aria-label="Not included">✗</span><span style="color:var(--text-muted)">Voting rights (18+ only)</span></li>
@@ -422,7 +596,7 @@
             <p class="tier-note">
               ⚠ &nbsp;Parent or guardian consent is required at registration for all members under 18.
             </p>
-            <a href="membership-form.html?type=junior" class="btn-tier">JOIN FREE &nbsp;›</a>
+            <a href="contact.html" class="btn-tier">JOIN FREE &nbsp;›</a>
           </div>
         </div>
 
@@ -440,7 +614,7 @@
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Race day participation</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club Discord access</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club newsletter &amp; announcements</li>
-
+            <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Club insurance coverage</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Pilot progression support</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Eligible for season rankings</li>
             <li class="tier-feature"><span class="feat-check yes" aria-label="Included">✓</span>Voting rights at AGM</li>
@@ -450,7 +624,7 @@
             <p class="tier-note">
               Standard membership for all adult pilots aged 18 and over.
             </p>
-            <a href="membership-form.html?type=adult" class="btn-tier primary">JOIN FREE &nbsp;›</a>
+            <a href="contact.html" class="btn-tier primary">JOIN FREE &nbsp;›</a>
           </div>
         </div>
 
@@ -520,7 +694,16 @@
         <a href="https://www.facebook.com/groups/2854211838310669/" class="social-btn" aria-label="Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
       </div>
     </div>
-  </footer>
-
+  <script>
+    // Founding member CTA — disable if all spots taken (update data-claimed manually)
+    const fs      = document.getElementById('founding-section');
+    const claimed = parseInt(fs.dataset.claimed) || 0;
+    const total   = parseInt(fs.dataset.total)   || 20;
+    if (claimed >= total) {
+      const btn = document.querySelector('.btn-founding');
+      btn.textContent = 'FOUNDING MEMBERSHIP — ALL SPOTS TAKEN';
+      btn.style.cssText += ';background:var(--border-b);color:var(--text-muted);pointer-events:none;box-shadow:none;';
+    }
+  </script>
 </body>
 </html>

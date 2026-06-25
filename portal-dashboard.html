@@ -151,6 +151,16 @@
     .welcome-email { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:0.06em; margin-bottom:10px; }
     .welcome-status { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; background:var(--green-dim); border:1px solid rgba(0,230,118,0.2); font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--green); letter-spacing:0.12em; }
     .status-pip { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 5px var(--green); animation:blink 2s ease-in-out infinite; }
+    .founding-badge {
+      display:none; /* shown by JS if foundingMember===true */
+      align-items:center; gap:6px; padding:4px 14px;
+      background:rgba(255,180,0,0.10);
+      border:1px solid rgba(255,180,0,0.38);
+      font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+      letter-spacing:0.1em; color:#FFB400; margin-top:8px;
+      text-shadow:0 0 12px rgba(255,180,0,0.4);
+    }
+    .founding-badge.visible { display:inline-flex; }
 
     /* ── PORTAL CARDS ── */
     .portal-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-top:none; }
@@ -293,6 +303,9 @@
         <div class="welcome-status">
           <div class="status-pip"></div>
           ACTIVE MEMBER
+        </div>
+        <div class="founding-badge" id="founding-badge">
+          ⭐ &nbsp;FOUNDING MEMBER &nbsp;<span id="founding-num" style="opacity:0.6;"></span>
         </div>
       </div>
     </div>
@@ -488,19 +501,21 @@
 
       const email = user.email;
 
-      // ── Callsign from Firestore ──────────────────────────────
-      // To set a callsign, go to:
-      //   Firebase Console → Firestore Database → pilots collection
-      //   → document ID = user's UID → field: callsign (string)
-      // Falls back to the email prefix if no Firestore doc exists yet.
-      let callsign = user.email.split('@')[0].toUpperCase();
+      // ── Callsign + founding status from Firestore ────────────
+      // Set in Firebase Console → Firestore → pilots/{uid}:
+      //   callsign (string), foundingMember (boolean), foundingMemberNumber (number)
+      let callsign      = user.email.split('@')[0].toUpperCase();
+      let isFounder     = false;
+      let founderNumber = null;
       try {
         const pilotDoc = await getDoc(doc(db, 'pilots', user.uid));
-        if (pilotDoc.exists() && pilotDoc.data().callsign) {
-          callsign = pilotDoc.data().callsign.toUpperCase();
+        if (pilotDoc.exists()) {
+          const d = pilotDoc.data();
+          if (d.callsign)             callsign      = d.callsign.toUpperCase();
+          if (d.foundingMember)       isFounder     = true;
+          if (d.foundingMemberNumber) founderNumber = d.foundingMemberNumber;
         }
       } catch (err) {
-        // Firestore not set up yet or no document — fall back silently
         console.log('Pilot profile not found in Firestore:', err.message);
       }
 
@@ -508,6 +523,15 @@
       document.getElementById('pilot-callsign-2').textContent = callsign;
       document.getElementById('pilot-email').textContent      = email;
       document.getElementById('pilot-email-2').textContent    = email;
+
+      // Show founding member badge if applicable
+      if (isFounder) {
+        const badge = document.getElementById('founding-badge');
+        badge.classList.add('visible');
+        if (founderNumber) {
+          document.getElementById('founding-num').textContent = `#${founderNumber} OF 20`;
+        }
+      }
 
       // Load saved avatar (default: WHOOP)
       const savedId = getSavedId();
