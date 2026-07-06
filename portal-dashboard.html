@@ -305,7 +305,7 @@
           ACTIVE MEMBER
         </div>
         <div class="founding-badge" id="founding-badge">
-          ⭐ &nbsp;FOUNDING MEMBER &nbsp;<span id="founding-num" style="opacity:0.6;"></span>
+          ⭐ &nbsp;FOUNDING MEMBER
         </div>
       </div>
     </div>
@@ -526,11 +526,7 @@
 
       // Show founding member badge if applicable
       if (isFounder) {
-        const badge = document.getElementById('founding-badge');
-        badge.classList.add('visible');
-        if (founderNumber) {
-          document.getElementById('founding-num').textContent = `#${founderNumber} OF 20`;
-        }
+        document.getElementById('founding-badge').classList.add('visible');
       }
 
       // Load saved avatar (default: WHOOP)
