@@ -224,8 +224,8 @@
     import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut }
                                from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collectionGroup, query,
-             where, getDocs, orderBy }
+    import { getFirestore, doc, getDoc, collection, query,
+             where, getDocs }
                                from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -263,7 +263,10 @@
     // ── Load builds ───────────────────────────────────────────────
     async function loadBuilds() {
       try {
-        const q    = query(collectionGroup(db, 'builds'), where('public','==',true));
+        const q    = query(
+          collection(db, 'builds'),
+          where('public', '==', true)
+        );
         const snap = await getDocs(q);
         allBuilds  = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         // Sort newest first client-side (avoids needing composite index)
