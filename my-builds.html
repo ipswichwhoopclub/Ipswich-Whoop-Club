@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Builds — IWC Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#08080F; --bg-2:#0C0C1A; --bg-card:#0F0F1E; --bg-card-h:#131328;
+      --primary:#1B8AB0; --primary-b:#22A8D8; --primary-glow:rgba(34,168,216,0.25);
+      --primary-dim:rgba(34,168,216,0.07); --green:#00E676; --green-dim:rgba(0,230,118,0.08);
+      --red:#FF4444; --text:#DDE0F0; --text-dim:#7A7AA0; --text-muted:#484870;
+      --border:#18183A; --border-b:#222248; --nav-bg:#09091A;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    a{color:inherit;text-decoration:none;}
+    ul{list-style:none;}
+    body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+    input,textarea,select{background:var(--bg-2);border:1px solid var(--border-b);color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;padding:10px 14px;width:100%;outline:none;transition:border-color 0.18s;}
+    input:focus,textarea:focus{border-color:var(--primary-b);}
+    input::placeholder,textarea::placeholder{color:var(--text-muted);}
+    button{cursor:pointer;font-family:'Orbitron',monospace;letter-spacing:0.1em;}
+
+    /* ── LOADING SCREEN ── */
+    #loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;}
+    .loading-spinner{width:36px;height:36px;border:3px solid var(--border-b);border-top-color:var(--primary-b);border-radius:50%;animation:spin 0.8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+    /* ── PORTAL HEADER / NAV ── */
+    .portal-header{background:var(--bg-2);border-bottom:2px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:20px;}
+    .portal-logo img{height:52px;width:auto;filter:drop-shadow(0 0 10px rgba(34,168,216,0.4));}
+    .portal-title{flex:1;}
+    .portal-site-name{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--primary-b);}
+    .portal-page-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:0.08em;color:var(--text);}
+    .portal-user-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--primary-dim);border:1px solid var(--border-b);font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--primary-b);letter-spacing:0.1em;}
+    .user-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2.4s ease-in-out infinite;}
+
+    .portal-nav{background:var(--nav-bg);border-bottom:2px solid var(--border);display:flex;align-items:stretch;overflow-x:auto;}
+    .portal-nav::-webkit-scrollbar{display:none;}
+    .portal-nav a{display:flex;align-items:center;height:44px;padding:0 20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.13em;color:var(--text-dim);white-space:nowrap;border-right:1px solid var(--border);transition:color 0.18s,background 0.18s;}
+    .portal-nav a:hover{color:var(--primary-b);background:var(--primary-dim);}
+    .portal-nav a.active{color:var(--text);background:rgba(34,168,216,0.1);border-bottom:2px solid var(--primary-b);}
+    .portal-nav-logout{margin-left:auto;display:flex;align-items:center;height:44px;padding:0 20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.13em;color:var(--text-muted);border-left:1px solid var(--border);cursor:pointer;transition:color 0.18s;}
+    .portal-nav-logout:hover{color:var(--red);}
+
+    /* ── PAGE ── */
+    .page-wrap{max-width:1200px;margin:0 auto;padding:24px 28px 40px;}
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+    .page-heading{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;letter-spacing:0.08em;color:var(--text);}
+    .page-heading span{color:var(--primary-b);}
+    .btn-new-build{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--primary);border:2px solid var(--primary-b);font-size:11px;font-weight:700;letter-spacing:0.14em;color:white;transition:background 0.18s,box-shadow 0.18s;}
+    .btn-new-build:hover{background:var(--primary-b);box-shadow:0 0 18px var(--primary-glow);}
+
+    /* ── BUILDS GRID ── */
+    #builds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+
+    /* ── EMPTY STATE ── */
+    #empty-state{display:none;background:var(--bg-card);border:1px solid var(--border);padding:60px 32px;text-align:center;}
+    .empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4;}
+    .empty-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:8px;}
+    .empty-sub{color:var(--text-muted);font-size:13px;}
+
+    /* ── BUILD CARD ── */
+    .build-card{background:var(--bg-card);border:1px solid var(--border);overflow:hidden;transition:border-color 0.18s;}
+    .build-card:hover{border-color:var(--border-b);}
+    .card-photo-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg-2);position:relative;}
+    .card-photo-wrap img{width:100%;height:100%;object-fit:cover;}
+    .card-photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+    .card-photo-count{position:absolute;bottom:8px;right:8px;background:rgba(8,8,15,0.85);padding:3px 8px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;}
+    .card-info{padding:16px 18px;}
+    .card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;}
+    .card-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:0.08em;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .card-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.14em;padding:3px 8px;flex-shrink:0;}
+    .card-badge.pub{background:var(--green-dim);border:1px solid rgba(0,230,118,0.25);color:var(--green);}
+    .card-badge.prv{background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);color:#FF7777;}
+    .card-specs{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+    .spec-item{display:flex;gap:8px;font-size:12px;}
+    .spec-l{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text-muted);width:60px;flex-shrink:0;}
+    .spec-v{color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .card-actions{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);}
+    .btn-edit{flex:1;padding:9px 0;background:var(--primary-dim);border:1px solid var(--border-b);font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--primary-b);transition:background 0.18s,border-color 0.18s;}
+    .btn-edit:hover{background:rgba(34,168,216,0.15);border-color:var(--primary);}
+    .btn-delete{padding:9px 14px;background:rgba(255,68,68,0.06);border:1px solid rgba(255,68,68,0.18);font-size:10px;font-weight:700;letter-spacing:0.12em;color:#FF7777;transition:background 0.18s;}
+    .btn-delete:hover{background:rgba(255,68,68,0.14);}
+
+    /* ── MODAL OVERLAY ── */
+    #build-modal{display:none;position:fixed;inset:0;background:rgba(4,4,12,0.88);z-index:1000;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+    .modal-panel{background:var(--bg-2);border:1px solid var(--border-b);margin:24px auto;max-width:680px;width:calc(100% - 32px);display:flex;flex-direction:column;}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg-2);z-index:1;}
+    .modal-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:0.1em;color:var(--primary-b);}
+    .modal-title::before{content:'// ';opacity:0.55;}
+    .modal-close{background:none;border:1px solid var(--border-b);color:var(--text-muted);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;transition:color 0.18s,border-color 0.18s;}
+    .modal-close:hover{color:var(--red);border-color:rgba(255,68,68,0.4);}
+    .modal-body{padding:22px;display:flex;flex-direction:column;gap:20px;}
+    .modal-footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;position:sticky;bottom:0;background:var(--bg-2);}
+    .btn-cancel{flex:1;padding:12px;background:none;border:1px solid var(--border-b);font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--text-muted);transition:border-color 0.18s,color 0.18s;}
+    .btn-cancel:hover{border-color:var(--border-b);color:var(--text);}
+    .btn-save{flex:2;padding:12px;background:var(--primary);border:2px solid var(--primary-b);font-size:10px;font-weight:700;letter-spacing:0.14em;color:white;transition:background 0.18s,box-shadow 0.18s;}
+    .btn-save:hover:not(:disabled){background:var(--primary-b);box-shadow:0 0 18px var(--primary-glow);}
+    .btn-save:disabled{opacity:0.5;cursor:not-allowed;}
+
+    /* ── FORM SECTIONS ── */
+    .form-section{display:flex;flex-direction:column;gap:12px;}
+    .form-section-head{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:0.2em;color:var(--primary-b);padding-bottom:10px;border-bottom:1px solid var(--border);}
+    .form-section-head::before{content:'// ';opacity:0.55;}
+    .form-row{display:flex;gap:12px;}
+    .form-field{display:flex;flex-direction:column;gap:5px;flex:1;}
+    .form-field label:not(.toggle-label){font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:0.16em;color:var(--text-muted);}
+    .form-field textarea{resize:vertical;min-height:100px;line-height:1.7;}
+
+    /* ── TOGGLE ── */
+    .toggle-label{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 14px;background:var(--bg);border:1px solid var(--border-b);}
+    .toggle-label span:first-child{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.14em;color:var(--text-dim);}
+    .toggle-input{display:none;}
+    .toggle-track{width:40px;height:22px;background:var(--border-b);border-radius:11px;position:relative;transition:background 0.2s;flex-shrink:0;}
+    .toggle-thumb{width:16px;height:16px;background:var(--text-muted);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform 0.2s,background 0.2s;}
+    .toggle-input:checked + .toggle-track{background:var(--primary);}
+    .toggle-input:checked + .toggle-track .toggle-thumb{transform:translateX(18px);background:white;}
+
+    /* ── PHOTO UPLOAD ── */
+    .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:10px;}
+    .photo-thumb{position:relative;aspect-ratio:1;overflow:hidden;background:var(--bg);}
+    .photo-thumb img{width:100%;height:100%;object-fit:cover;}
+    .photo-thumb-remove{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,0.75);border:none;color:white;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;}
+    .photo-thumb-remove:hover{background:rgba(255,68,68,0.85);}
+    .photo-add-zone{border:2px dashed var(--border-b);padding:24px 16px;text-align:center;cursor:pointer;transition:border-color 0.18s,background 0.18s;}
+    .photo-add-zone:hover{border-color:var(--primary-b);background:var(--primary-dim);}
+    .photo-add-icon{font-size:28px;margin-bottom:6px;opacity:0.6;}
+    .photo-add-text{font-family:'Orbitron',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--text-dim);margin-bottom:4px;}
+    .photo-add-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);}
+    .photo-limit-note{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);text-align:center;padding:6px 0;}
+
+    /* ── STATUS ── */
+    .save-status{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.1em;padding:8px 16px;text-align:center;display:none;}
+    .save-status.saving{display:block;color:var(--primary-b);background:var(--primary-dim);border:1px solid var(--border-b);}
+    .save-status.error{display:block;color:#FF7777;background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);}
+
+    /* ── DELETE CONFIRM ── */
+    #delete-modal{display:none;position:fixed;inset:0;background:rgba(4,4,12,0.88);z-index:1100;align-items:center;justify-content:center;}
+    #delete-modal.open{display:flex;}
+    .delete-panel{background:var(--bg-card);border:1px solid rgba(255,68,68,0.3);border-top:3px solid var(--red);padding:28px 28px 22px;max-width:380px;width:calc(100% - 48px);}
+    .delete-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:0.1em;color:#FF7777;margin-bottom:12px;}
+    .delete-msg{color:var(--text-dim);font-size:13.5px;line-height:1.7;margin-bottom:22px;}
+    .delete-actions{display:flex;gap:10px;}
+    .btn-del-cancel{flex:1;padding:10px;background:none;border:1px solid var(--border-b);font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);transition:color 0.18s;}
+    .btn-del-cancel:hover{color:var(--text);}
+    .btn-del-confirm{flex:1;padding:10px;background:rgba(255,68,68,0.12);border:1px solid rgba(255,68,68,0.4);font-size:10px;font-weight:700;letter-spacing:0.1em;color:#FF7777;transition:background 0.18s;}
+    .btn-del-confirm:hover{background:rgba(255,68,68,0.24);}
+
+    /* ── FOOTER ── */
+    .portal-footer{margin-top:40px;border-top:1px solid var(--border);background:var(--bg-2);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+    .portal-footer-brand{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--primary-b);letter-spacing:0.1em;}
+    .portal-footer-copy{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--text-muted);}
+    .portal-footer a{color:var(--text-muted);text-decoration:underline;text-underline-offset:3px;}
+    .portal-footer a:hover{color:var(--primary-b);}
+
+    @media(max-width:600px){
+      .form-row{flex-direction:column;}
+      .portal-header{padding:12px 16px;}
+      .page-wrap{padding:16px 16px 32px;}
+      .modal-panel{margin:12px auto;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading / auth screen -->
+  <div id="loading-screen">
+    <div class="loading-spinner"></div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:0.14em;">AUTHENTICATING...</div>
+  </div>
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <a href="index.html" class="portal-logo"><img src="assets/logo.png" alt="IWC"></a>
+    <div class="portal-title">
+      <div class="portal-site-name">IPSWICH WHOOP CLUB</div>
+      <div class="portal-page-name">MY BUILDS</div>
+    </div>
+    <div class="portal-user-chip">
+      <div class="user-dot"></div>
+      <span id="nav-callsign">PILOT</span>
+    </div>
+  </header>
+
+  <nav class="portal-nav">
+    <a href="portal-dashboard.html">DASHBOARD</a>
+    <a href="my-builds.html" class="active">MY BUILDS</a>
+    <a href="community-builds.html">COMMUNITY BUILDS</a>
+    <a href="index.html">← MAIN SITE</a>
+    <span class="portal-nav-logout" id="logout-btn">LOGOUT</span>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="page-wrap">
+    <div class="page-header">
+      <div class="page-heading">MY <span>BUILDS</span></div>
+      <button class="btn-new-build" onclick="openModal(null)">+ ADD NEW BUILD</button>
+    </div>
+
+    <div id="builds-grid"></div>
+
+    <div id="empty-state">
+      <div class="empty-icon">🚁</div>
+      <div class="empty-title">NO BUILDS YET</div>
+      <div class="empty-sub">Add your first build to show off your setup to the club.</div>
+    </div>
+  </main>
+
+  <!-- Build Add/Edit Modal -->
+  <div id="build-modal">
+    <div class="modal-panel">
+
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">NEW BUILD</span>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Photos -->
+        <div class="form-section">
+          <div class="form-section-head">PHOTOS</div>
+          <div id="photo-grid" class="photo-grid"></div>
+          <div class="photo-add-zone" id="photo-add-zone" onclick="document.getElementById('photo-input').click()">
+            <div class="photo-add-icon">📷</div>
+            <div class="photo-add-text">TAP TO ADD PHOTOS</div>
+            <div class="photo-add-sub">Up to 5 photos · JPG or PNG</div>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" multiple style="display:none">
+          <div class="photo-limit-note" id="photo-limit-note"></div>
+        </div>
+
+        <!-- Build info -->
+        <div class="form-section">
+          <div class="form-section-head">BUILD INFO</div>
+          <div class="form-field">
+            <label>BUILD NAME *</label>
+            <input type="text" id="f-name" placeholder="e.g. Race Whoop v2" maxlength="60">
+          </div>
+          <div class="form-field">
+            <label class="toggle-label">
+              <span>VISIBLE TO OTHER MEMBERS</span>
+              <input type="checkbox" id="f-public" class="toggle-input">
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Frame & Props -->
+        <div class="form-section">
+          <div class="form-section-head">FRAME & PROPS</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>FRAME</label>
+              <input type="text" id="f-frame" placeholder="e.g. BetaFPV 75X">
+            </div>
+            <div class="form-field">
+              <label>WEIGHT (g AUW)</label>
+              <input type="text" id="f-weight" placeholder="e.g. 27">
+            </div>
+          </div>
+          <div class="form-field">
+            <label>PROPS</label>
+            <input type="text" id="f-props" placeholder="e.g. HQ 40mm 4-blade">
+          </div>
+        </div>
+
+        <!-- Power -->
+        <div class="form-section">
+          <div class="form-section-head">POWER</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>MOTORS</label>
+              <input type="text" id="f-motors" placeholder="e.g. 1102 18000KV">
+            </div>
+            <div class="form-field">
+              <label>BATTERY</label>
+              <input type="text" id="f-battery" placeholder="e.g. GNB 1S 300mAh">
+            </div>
+          </div>
+        </div>
+
+        <!-- Electronics -->
+        <div class="form-section">
+          <div class="form-section-head">ELECTRONICS</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>FLIGHT CONTROLLER</label>
+              <input type="text" id="f-fc" placeholder="e.g. Betaflight F4 AIO">
+            </div>
+            <div class="form-field">
+              <label>ESC</label>
+              <input type="text" id="f-esc" placeholder="e.g. BLHeli_32 5A">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>CAMERA</label>
+              <input type="text" id="f-camera" placeholder="e.g. C01 Pro">
+            </div>
+            <div class="form-field">
+              <label>VIDEO TX</label>
+              <input type="text" id="f-vtx" placeholder="e.g. M03 200mW">
+            </div>
+          </div>
+          <div class="form-field">
+            <label>RECEIVER</label>
+            <input type="text" id="f-receiver" placeholder="e.g. ELRS 2.4GHz">
+          </div>
+        </div>
+
+        <!-- Tuning -->
+        <div class="form-section">
+          <div class="form-section-head">TUNING NOTES</div>
+          <div class="form-field">
+            <textarea id="f-tuning" rows="5" placeholder="Rates, PID settings, filter setup, or anything else worth sharing..."></textarea>
+          </div>
+        </div>
+
+        <div class="save-status" id="save-status"></div>
+      </div><!-- /modal-body -->
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+        <button class="btn-save" id="btn-save" onclick="saveBuild()">SAVE BUILD</button>
+      </div>
+
+    </div>
+  </div><!-- /build-modal -->
+
+  <!-- Delete Confirm Modal -->
+  <div id="delete-modal">
+    <div class="delete-panel">
+      <div class="delete-title">DELETE BUILD?</div>
+      <div class="delete-msg" id="delete-msg"></div>
+      <div class="delete-actions">
+        <button class="btn-del-cancel" onclick="closeDeleteModal()">CANCEL</button>
+        <button class="btn-del-confirm" id="delete-confirm-btn">DELETE</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="portal-footer">
+    <div class="portal-footer-brand">IPSWICH WHOOP CLUB</div>
+    <div class="portal-footer-copy">&copy; 2026 IWC INC. &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp }        from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut }
+                                    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc,
+             updateDoc, deleteDoc, serverTimestamp, query, orderBy }
+                                    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL }
+                                    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDw6ewtq8R-Mo4MeXe8kwkgtyPA8G_3oGg",
+      authDomain:        "ipswich-whoop-club.firebaseapp.com",
+      projectId:         "ipswich-whoop-club",
+      storageBucket:     "ipswich-whoop-club.firebasestorage.app",
+      messagingSenderId: "341354958485",
+      appId:             "1:341354958485:web:b8a13989c6d6e354a7d59c"
+    };
+
+    const app     = initializeApp(firebaseConfig);
+    const auth    = getAuth(app);
+    const db      = getFirestore(app);
+    const storage = getStorage(app);
+
+    // ── State ────────────────────────────────────────────────────
+    let currentUser    = null;
+    let pilotCallsign  = 'PILOT';
+    let builds         = [];
+    let editingBuildId = null;   // null = new build
+    let pendingFiles   = [];     // File objects staged for upload
+    let savedPhotoUrls = [];     // URLs already in Firestore (when editing)
+
+    // ── Auth ─────────────────────────────────────────────────────
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = 'portal.html'; return; }
+      currentUser = user;
+      document.getElementById('loading-screen').style.display = 'none';
+      await loadPilotInfo();
+      await loadBuilds();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = 'portal.html');
+    });
+
+    async function loadPilotInfo() {
+      try {
+        const d = await getDoc(doc(db, 'pilots', currentUser.uid));
+        if (d.exists() && d.data().callsign) {
+          pilotCallsign = d.data().callsign.toUpperCase();
+          document.getElementById('nav-callsign').textContent = pilotCallsign;
+        }
+      } catch(e) {}
+    }
+
+    // ── Load & render builds ─────────────────────────────────────
+    async function loadBuilds() {
+      const q = query(
+        collection(db, 'pilots', currentUser.uid, 'builds'),
+        orderBy('createdAt', 'desc')
+      );
+      const snap = await getDocs(q);
+      builds = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderBuilds();
+    }
+
+    function renderBuilds() {
+      const grid  = document.getElementById('builds-grid');
+      const empty = document.getElementById('empty-state');
+      if (!builds.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+      empty.style.display = 'none';
+      grid.innerHTML = builds.map(buildCardHTML).join('');
+    }
+
+    function buildCardHTML(b) {
+      const firstPhoto = b.photos && b.photos.length > 0 ? b.photos[0] : null;
+      const photoHtml  = firstPhoto
+        ? `<img src="${firstPhoto}" alt="Build photo" loading="lazy">`
+        : `<div class="card-photo-placeholder"><svg width="48" height="48" viewBox="0 0 40 40" fill="none" opacity="0.25"><circle cx="20" cy="20" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="17" y1="17" x2="10" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="23" y1="17" x2="30" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="23" x2="10" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="23" y1="23" x2="30" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="32" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="32" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="32" cy="32" r="5" stroke="currentColor" stroke-width="1.2"/></svg></div>`;
+      const photoCount = b.photos && b.photos.length > 1
+        ? `<div class="card-photo-count">📷 ${b.photos.length}</div>` : '';
+      const safeId   = CSS.escape(b.id);
+      const safeName = (b.name || 'UNTITLED BUILD').replace(/'/g, "\\'");
+      return `
+        <div class="build-card">
+          <div class="card-photo-wrap">${photoHtml}${photoCount}</div>
+          <div class="card-info">
+            <div class="card-top">
+              <div class="card-name">${b.name || 'UNTITLED BUILD'}</div>
+              <div class="card-badge ${b.public ? 'pub' : 'prv'}">${b.public ? 'PUBLIC' : 'PRIVATE'}</div>
+            </div>
+            <div class="card-specs">
+              <div class="spec-item"><span class="spec-l">FRAME</span><span class="spec-v">${b.frame || '—'}</span></div>
+              <div class="spec-item"><span class="spec-l">MOTORS</span><span class="spec-v">${b.motors || '—'}</span></div>
+              <div class="spec-item"><span class="spec-l">WEIGHT</span><span class="spec-v">${b.weight ? b.weight+'g' : '—'}</span></div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-edit" onclick="window.openModal('${b.id}')">EDIT</button>
+              <button class="btn-delete" onclick="window.confirmDelete('${b.id}','${safeName}')">DELETE</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // ── Modal open/close ─────────────────────────────────────────
+    window.openModal = async function(buildId) {
+      editingBuildId = buildId || null;
+      pendingFiles   = [];
+      savedPhotoUrls = [];
+      resetForm();
+
+      if (buildId) {
+        document.getElementById('modal-title').textContent = 'EDIT BUILD';
+        document.getElementById('btn-save').textContent    = 'SAVE CHANGES';
+        const build = builds.find(b => b.id === buildId);
+        if (build) populateForm(build);
+      } else {
+        document.getElementById('modal-title').textContent = 'NEW BUILD';
+        document.getElementById('btn-save').textContent    = 'SAVE BUILD';
+      }
+
+      renderPhotoGrid();
+      document.getElementById('build-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function() {
+      document.getElementById('build-modal').style.display = 'none';
+      document.body.style.overflow = '';
+      resetStatus();
+    };
+
+    function resetForm() {
+      ['f-name','f-frame','f-weight','f-props','f-motors','f-battery',
+       'f-fc','f-esc','f-camera','f-vtx','f-receiver','f-tuning']
+        .forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-public').checked = true;
+    }
+
+    function populateForm(b) {
+      const set = (id, v) => { if(v) document.getElementById(id).value = v; };
+      set('f-name', b.name); set('f-frame', b.frame); set('f-weight', b.weight);
+      set('f-props', b.props); set('f-motors', b.motors); set('f-battery', b.battery);
+      set('f-fc', b.fc); set('f-esc', b.esc); set('f-camera', b.camera);
+      set('f-vtx', b.vtx); set('f-receiver', b.receiver); set('f-tuning', b.tuning);
+      document.getElementById('f-public').checked = b.public !== false;
+      savedPhotoUrls = b.photos ? [...b.photos] : [];
+    }
+
+    // ── Photo handling ────────────────────────────────────────────
+    document.getElementById('photo-input').addEventListener('change', e => {
+      const files = Array.from(e.target.files);
+      const current = savedPhotoUrls.length + pendingFiles.length;
+      const canAdd  = 5 - current;
+      if (canAdd <= 0) { alert('Maximum 5 photos per build.'); return; }
+      const toAdd = files.slice(0, canAdd);
+      const oversized = [];
+      toAdd.forEach(f => {
+        if (!f.type.startsWith('image/')) return;
+        if (f.size > 5 * 1024 * 1024) { oversized.push(f.name); return; }
+        pendingFiles.push(f);
+      });
+      if (oversized.length) {
+        alert('The following photos are over 5MB and were skipped:\n' + oversized.join('\n') + '\n\nPlease resize them and try again.');
+      }
+      renderPhotoGrid();
+      e.target.value = '';
+    });
+
+    function renderPhotoGrid() {
+      const grid  = document.getElementById('photo-grid');
+      const zone  = document.getElementById('photo-add-zone');
+      const note  = document.getElementById('photo-limit-note');
+      const total = savedPhotoUrls.length + pendingFiles.length;
+      const html  = [];
+
+      savedPhotoUrls.forEach((url, i) => {
+        html.push(`<div class="photo-thumb">
+          <img src="${url}" loading="lazy">
+          <button class="photo-thumb-remove" onclick="window.removeSavedPhoto(${i})" title="Remove">✕</button>
+        </div>`);
+      });
+
+      pendingFiles.forEach((file, i) => {
+        const objUrl = URL.createObjectURL(file);
+        html.push(`<div class="photo-thumb">
+          <img src="${objUrl}">
+          <button class="photo-thumb-remove" onclick="window.removePendingPhoto(${i})" title="Remove">✕</button>
+        </div>`);
+      });
+
+      grid.innerHTML = html.join('');
+      zone.style.display  = total >= 5 ? 'none' : 'block';
+      note.textContent    = total > 0  ? `${total}/5 photos` : '';
+    }
+
+    window.removeSavedPhoto   = i => { savedPhotoUrls.splice(i,1); renderPhotoGrid(); };
+    window.removePendingPhoto = i => { pendingFiles.splice(i,1);    renderPhotoGrid(); };
+
+    // ── Save build ────────────────────────────────────────────────
+    window.saveBuild = async function() {
+      const name = document.getElementById('f-name').value.trim();
+      if (!name) { alert('Please enter a build name.'); return; }
+
+      const btn = document.getElementById('btn-save');
+      btn.disabled = true;
+      showStatus('saving', 'UPLOADING PHOTOS & SAVING...');
+
+      try {
+        // Upload any pending photos
+        const newUrls = [];
+        for (const file of pendingFiles) {
+          const uniqueName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._]/g,'_')}`;
+          const path       = `builds/${currentUser.uid}/${uniqueName}`;
+          const snap       = await uploadBytes(ref(storage, path), file);
+          const url        = await getDownloadURL(snap.ref);
+          newUrls.push(url);
+        }
+
+        const allPhotos = [...savedPhotoUrls, ...newUrls];
+
+        const data = {
+          name:          name,
+          frame:         document.getElementById('f-frame').value.trim(),
+          weight:        document.getElementById('f-weight').value.trim(),
+          props:         document.getElementById('f-props').value.trim(),
+          motors:        document.getElementById('f-motors').value.trim(),
+          battery:       document.getElementById('f-battery').value.trim(),
+          fc:            document.getElementById('f-fc').value.trim(),
+          esc:           document.getElementById('f-esc').value.trim(),
+          camera:        document.getElementById('f-camera').value.trim(),
+          vtx:           document.getElementById('f-vtx').value.trim(),
+          receiver:      document.getElementById('f-receiver').value.trim(),
+          tuning:        document.getElementById('f-tuning').value.trim(),
+          public:        document.getElementById('f-public').checked,
+          photos:        allPhotos,
+          pilotCallsign: pilotCallsign,
+          pilotUid:      currentUser.uid,
+          updatedAt:     serverTimestamp()
+        };
+
+        if (editingBuildId) {
+          await updateDoc(
+            doc(db, 'pilots', currentUser.uid, 'builds', editingBuildId), data
+          );
+        } else {
+          data.createdAt = serverTimestamp();
+          await addDoc(collection(db, 'pilots', currentUser.uid, 'builds'), data);
+        }
+
+        await loadBuilds();
+        closeModal();
+
+      } catch(err) {
+        console.error(err);
+        showStatus('error', 'SAVE FAILED — ' + (err.message || 'check console'));
+        btn.disabled = false;
+      }
+    };
+
+    // ── Delete build ──────────────────────────────────────────────
+    let pendingDeleteId = null;
+
+    window.confirmDelete = function(buildId, buildName) {
+      pendingDeleteId = buildId;
+      document.getElementById('delete-msg').textContent =
+        `"${buildName}" will be permanently deleted. This cannot be undone.`;
+      document.getElementById('delete-modal').classList.add('open');
+    };
+
+    window.closeDeleteModal = function() {
+      pendingDeleteId = null;
+      document.getElementById('delete-modal').classList.remove('open');
+    };
+
+    document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
+      if (!pendingDeleteId) return;
+      await deleteDoc(doc(db, 'pilots', currentUser.uid, 'builds', pendingDeleteId));
+      closeDeleteModal();
+      await loadBuilds();
+    });
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function showStatus(type, msg) {
+      const el = document.getElementById('save-status');
+      el.textContent = msg;
+      el.className   = `save-status ${type}`;
+    }
+    function resetStatus() {
+      const el = document.getElementById('save-status');
+      el.textContent = '';
+      el.className   = 'save-status';
+    }
+  </script>
+</body>
+</html>
