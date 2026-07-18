@@ -578,7 +578,9 @@
         for (const file of pendingFiles) {
           const uniqueName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._]/g,'_')}`;
           const path       = `builds/${currentUser.uid}/${uniqueName}`;
-          const snap       = await uploadBytes(ref(storage, path), file);
+          const snap       = await uploadBytes(ref(storage, path), file, {
+            contentType: file.type
+          });
           const url        = await getDownloadURL(snap.ref);
           newUrls.push(url);
         }
